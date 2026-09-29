@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ScholarPath
 
-## Getting Started
+Free, open-source web app that matches students with Germany's 13 *Begabtenförderungswerke* and helps them write the application. UI in **English, German and Chinese**. See [BUILD_BRIEF.md](BUILD_BRIEF.md) for the vision and design system.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # then put your Mistral API key into .env.local
+npm run dev                  # http://localhost:3000
+npm test                     # matching engine + profile helpers
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`MISTRAL_API_KEY` stays on the server (never sent to the browser). `MISTRAL_MODEL` is optional; the default is `ministral-8b-latest`, because on the free "Experiment" tier `mistral-small-latest` can have a quota of 0 requests/minute.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How it works
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Describe** (`/`): free text (+ optional `.txt`/`.md` CV) → `POST /api/profile` extracts a structured profile. A keyword extractor (`src/lib/profile.ts`) fills gaps and is the fallback if the AI is down.
+2. **Matches** (`/analyzing` → `/matches`): `src/lib/matching.ts` scores all 13 scholarships deterministically (0-100). `POST /api/explain` writes the "why it fits" text for the top 3 in the active language; template texts are used if the AI fails.
+3. **Apply** (`/workspace/[id]`): document checklist, letter editor (Improve / Shorten / Translate, only applied when you click "Use this"; "Generate Draft PDF" opens the print dialog), and a coaching assistant (`/api/coach`, `/api/coach/suggestions`, `/api/coach/edit`) that never writes the whole letter.
 
-## Learn More
+All LLM calls live in `src/lib/ai.ts`. Facts (deadlines, criteria) only come from `data/scholarships.json`; the UI never shows past dates as current and always points to the official site.
 
-To learn more about Next.js, take a look at the following resources:
+## Privacy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Profile, matches and drafts are stored only in your browser (`localStorage`). Text you write is sent to Mistral (EU) for analysis and is not logged or stored by this app.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Layout
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The UI is designed at 1440×900 and scaled uniformly to fit any window (`src/components/Stage.tsx`), so every screen is one full-screen view and the page never scrolls.

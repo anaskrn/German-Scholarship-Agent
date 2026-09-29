@@ -1,11 +1,10 @@
-Project: AI scholarship finder for Germany (13 Begabtenförderungswerke first).
-Stack: Next.js App Router, TypeScript strict, Tailwind, shadcn/ui, Framer Motion, Vercel AI SDK, Zod, next-intl, Vitest.
-Rules:
-- All LLM calls go through src/lib/ai.ts only.
-- Matching is deterministic in src/lib/matching.ts; LLM only writes explanations. Never invent facts.
-- Essay coach never writes full essays; it asks questions and gives feedback.
-- Sensitive answers (religion, politics, migration) are optional, never stored server-side or logged.
-- Validate all data and inputs with Zod. Never commit secrets.
-- Small, focused components; keep the app runnable after every change.
-- Code/comments/commits in English; UI strings via next-intl (de default).
-Read PROJECT_CONTEXT.md for full context.
+Project: ScholarPath, AI scholarship finder for Germany (13 Begabtenförderungswerke first). Read BUILD_BRIEF.md.
+Stack: Next.js App Router, TypeScript strict, Tailwind + CSS variables, shadcn/ui, Framer Motion, Vercel AI SDK (Mistral), Zod, next-intl (en/de/zh), Vitest.
+- Match the Lavender design in BUILD_BRIEF.md section 4. Tokens live in CSS variables so a dark "Obsidian + Lime" theme can be swapped in.
+- All LLM calls go through src/lib/ai.ts only. Matching is deterministic in src/lib/matching.ts; the LLM only extracts the profile and writes explanations. Never invent facts; use only data/scholarships.json.
+- The writing assistant coaches; it never writes a full essay on request.
+- Sensitive answers (religion, politics, migration, union) are optional, never logged, never stored server-side.
+- The landing page shows no scholarship names.
+- No hard-coded UI strings: use next-intl message files.
+- Small focused components; keep the app runnable after every change; run lint, tests and build before finishing a task.
+- Never commit secrets. Code/comments/commits in English.
