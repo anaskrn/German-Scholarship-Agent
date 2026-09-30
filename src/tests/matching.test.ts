@@ -4,6 +4,15 @@ import { emptyProfile, heuristicProfile, mergeProfiles, normalizeProfile, verify
 import type { Profile } from "@/lib/schema";
 import { profileChips, profileRows, partialProfile } from "@/lib/facts";
 import { translations } from "@/lib/i18n";
+import {
+  adaptOpening,
+  assembleLetter,
+  assessLetter,
+  isWrittenIn,
+  letterSentences,
+  removeSentences,
+  type LetterDraft,
+} from "@/lib/letter";
 
 describe("matchScholarships", () => {
   it("scores all 13 scholarships, sorted, within 0-100", () => {
@@ -213,5 +222,128 @@ describe("loading-screen facts", () => {
     expect(partialProfile(profile, 1).phase).toBe("master");
     expect(partialProfile(profile, 1).topics).toEqual([]);
     expect(matchScholarships(partialProfile(profile, 5))).toEqual(matchScholarships(profile));
+  });
+});
+
+describe("motivation letter safeguards", () => {
+  const source =
+    "Amira Khalil. M.Sc. Renewable Energy Engineering, TU Munich, since October 2024. Current GPA 1.4. " +
+    "Working student, Siemens Energy, Munich: modelling battery storage dispatch in Python for a 20 MW pilot project. " +
+    "Intern, Jordan Valley Solar Initiative (summer 2022): installed and monitored a 12 kW school PV system.";
+  const para = (text: string, cvQuotes: string[]) => ({ text, cvQuotes });
+  const facts = "Studienstiftung values: Leistung, Verantwortung";
+  const long = (s: string) => Array(14).fill(s).join(" ");
+  const good: LetterDraft = {
+    applicantName: "Amira Khalil",
+    paragraphs: [
+      para(long("I study renewable energy engineering at TU Munich with a GPA of 1.4 and I care about the grid."), [
+        "TU Munich, since October 2024",
+      ]),
+      para(
+        long("At Siemens Energy I model battery storage dispatch for a 20 MW pilot project and the team relies on it."),
+        ["modelling battery storage dispatch in Python"],
+      ),
+      para(
+        long("In 2022 I installed a 12 kW PV system for a school, together with the local technicians and teachers."),
+        ["installed and monitored a 12 kW school PV system"],
+      ),
+    ],
+  };
+  const check = (draft: LetterDraft, lang: "en" | "de" | "zh" = "en") =>
+    assessLetter({ draft, lang, source, allowedFacts: facts });
+
+  it("accepts a letter that only uses facts from the material", () => {
+    expect(check(good).issues).toEqual([]);
+  });
+
+  it("blocks numbers that are not in the material", () => {
+    const bad = {
+      ...good,
+      paragraphs: [
+        para("I won 3 national prizes in 2019 and I study energy at TU Munich.", good.paragraphs[0].cvQuotes),
+        ...good.paragraphs.slice(1),
+      ],
+    };
+    expect(check(bad).issues).toContain("numbers");
+    expect(check(bad).blocking).toBe(true);
+  });
+
+  it("blocks quotes that do not occur in the material (invented anchors)", () => {
+    const bad = {
+      ...good,
+      paragraphs: good.paragraphs.map((p) => ({ ...p, cvQuotes: ["led a team of fifty engineers at Tesla"] })),
+    };
+    expect(check(bad).issues).toContain("quotes");
+  });
+
+  it("blocks a letter in the wrong language", () => {
+    expect(check(good, "de").issues).toContain("language");
+    expect(check(good, "zh").issues).toContain("language");
+    expect(
+      isWrittenIn("de", "Ich studiere Energietechnik an der TU München und arbeite mit der Industrie zusammen."),
+    ).toBe(true);
+    expect(isWrittenIn("zh", "我目前就读于慕尼黑工业大学，专注于电网融合与能源储存领域。")).toBe(true);
+    expect(isWrittenIn("en", "我目前就读于慕尼黑工业大学")).toBe(false);
+  });
+
+  it("only flags a short but honest letter as a soft issue", () => {
+    const short = { ...good, paragraphs: good.paragraphs.map((p) => ({ ...p, text: p.text.split(".")[0] + "." })) };
+    const a = check(short);
+    expect(a.issues).toContain("short");
+    expect(a.blocking).toBe(false);
+  });
+
+  it("removes flagged sentences and drops empty paragraphs", () => {
+    const draft: LetterDraft = {
+      applicantName: null,
+      paragraphs: [para("First fact. Invented plan. Third fact.", []), para("Only an invented claim.", [])],
+    };
+    expect(letterSentences(draft, "en")).toEqual([
+      "First fact.",
+      "Invented plan.",
+      "Third fact.",
+      "Only an invented claim.",
+    ]);
+    const cleaned = removeSentences(draft, "en", [1, 3]);
+    expect(cleaned.paragraphs.map((p) => p.text)).toEqual(["First fact. Third fact."]);
+  });
+
+  it("signs with the name only when the material states it, otherwise with a placeholder", () => {
+    expect(assembleLetter(good, "en", source)).toMatch(/Sincerely,\n\nAmira Khalil$/);
+    expect(assembleLetter({ ...good, applicantName: "Max Mustermann" }, "en", source)).toMatch(/\[Your name\]$/);
+    expect(assembleLetter({ ...good, applicantName: null }, "de", source)).toMatch(
+      /Mit freundlichen Grüßen\n\n\[Vorname Nachname\]$/,
+    );
+    expect(assembleLetter({ ...good, applicantName: null }, "zh", source)).toMatch(/此致\n敬礼！\n\n\[你的姓名\]$/);
+  });
+
+  it("continues a German letter in lower case after the comma of the salutation", () => {
+    expect(adaptOpening("de", "Hiermit bewerbe ich mich um ein Stipendium.")).toBe(
+      "hiermit bewerbe ich mich um ein Stipendium.",
+    );
+    expect(adaptOpening("de", "Ich studiere Energietechnik.")).toBe("Ich studiere Energietechnik.");
+    expect(adaptOpening("de", "Mein aktueller Schwerpunkt ist Netzintegration.")).toBe(
+      "mein aktueller Schwerpunkt ist Netzintegration.",
+    );
+    expect(adaptOpening("de", "Die Stiftung passt zu mir.")).toBe("die Stiftung passt zu mir.");
+    expect(adaptOpening("de", "Energie ist mein Thema.")).toBe("Energie ist mein Thema.");
+    expect(adaptOpening("en", "Hiermit")).toBe("Hiermit");
+  });
+
+  it("has the generator texts in all three languages", () => {
+    for (const lang of ["en", "de", "zh"] as const) {
+      const w = translations[lang].workspace;
+      for (const key of [
+        "generate",
+        "generating",
+        "generatingHint",
+        "generateCta",
+        "generatedLabel",
+        "generatedHint",
+        "generateNeedsInfo",
+      ] as const) {
+        expect(w[key].length).toBeGreaterThan(3);
+      }
+    }
   });
 });

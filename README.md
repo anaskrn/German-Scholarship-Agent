@@ -19,7 +19,7 @@ npm run build
 
 1. **Describe** (`/`): free text and/or a PDF CV → `POST /api/profile` extracts a structured profile. Text PDFs are read by `POST /api/cv`; scanned PDFs are read in the browser with OCR (German, English, Chinese), so the file never leaves the device for that step. A keyword extractor (`src/lib/profile.ts`) fills gaps and is the fallback if the AI is down.
 2. **Matches** (`/analyzing` → `/matches`): `src/lib/matching.ts` scores all 13 scholarships deterministically (0-100). `POST /api/explain` writes the "why it fits" text for the top 3 in the active language; template texts are used if the AI fails.
-3. **Apply** (`/workspace/[id]`): document checklist, letter editor (Improve / Shorten / Translate, only applied when you click "Use this"; "Generate Draft PDF" opens the print dialog), and a coaching assistant (`/api/coach`, `/api/coach/suggestions`, `/api/coach/edit`) that never writes the whole letter.
+3. **Apply** (`/workspace/[id]`): document checklist, letter editor and a coaching assistant (`/api/coach`, `/api/coach/suggestions`, `/api/coach/edit`). **Generate letter** (`/api/coach/letter`) writes a first motivation letter from your CV in the selected language (EN/DE/ZH); Improve / Shorten / Translate are only applied when you click "Use this"; "Generate Draft PDF" opens the print dialog. The chat assistant coaches and never writes the whole letter itself.
 
 All LLM calls live in `src/lib/ai.ts`. Facts (deadlines, criteria) only come from `data/scholarships.json`; the UI never shows past dates as current and always points to the official site.
 
@@ -34,6 +34,17 @@ While the analysis runs, `/analyzing` shows a live picture of it (`src/component
 ## No invented facts
 
 Everything the AI extracts is checked against the user's own text before it is used (`verifyProfile` in `src/lib/profile.ts`): religion, party, union and first-generation status are taken only from explicit statements ("I am Catholic", "member of the SPD"), never from a mere mention; grades, study level, field, goal, country and languages must be traceable to the text; AI explanations containing numbers that are not in the data are discarded. Anything unsupported shows as "not mentioned".
+
+### Generated letters
+
+The letter is written by Mistral (free tier only, `ministral-14b-latest` with `ministral-8b-latest` as fallback) from the CV / description you entered, then checked before you see it (`src/lib/letter.ts`, `src/lib/ai.ts`):
+
+- the model must quote the CV snippets each paragraph is based on; quotes that are not really in the CV reject the letter
+- numbers (years, grades, counts) that are not in your CV or the scholarship data reject the letter; so does the wrong language
+- a second, independent pass fact-checks every sentence against the CV and removes claims it cannot find there
+- the name in the signature is used only if it is in your CV, otherwise a placeholder is inserted
+- too little material (under 150 characters) gives a hint to add your CV instead of a padded letter
+- existing text is only replaced after you click "Replace text"
 
 ## Privacy
 

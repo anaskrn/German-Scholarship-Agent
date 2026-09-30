@@ -22,7 +22,10 @@ export async function parseBody<T extends z.ZodTypeAny>(
  */
 export function aiFailure(route: string, err: unknown): NextResponse {
   const kind = classifyAiError(err);
-  console.warn(`[${route}] AI call failed: ${kind}`);
+  const e = err as { name?: string; statusCode?: number; lastError?: { statusCode?: number } };
+  console.warn(
+    `[${route}] AI call failed: ${kind} (${e?.name}, status ${e?.statusCode ?? e?.lastError?.statusCode ?? "n/a"})`,
+  );
   const status = kind === "rate_limited" ? 429 : kind === "no_key" ? 503 : 502;
   return NextResponse.json({ error: kind }, { status });
 }

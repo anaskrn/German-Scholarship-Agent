@@ -169,3 +169,10 @@ export const EditRequestSchema = z.object({
   mode: z.enum(["improve", "shorten", "translate"]),
   text: z.string().min(1).max(8000),
 });
+
+export const LetterRequestSchema = z.object({
+  lang: z.enum(["en", "de", "zh"]),
+  scholarshipId: z.string(),
+  /** the student's own material: typed description and/or CV text */
+  text: z.string().min(1).max(20000),
+});

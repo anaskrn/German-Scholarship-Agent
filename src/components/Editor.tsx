@@ -1,13 +1,15 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { X } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { buildAnalysisText } from "@/lib/analysis";
 import { countWords, errorKind, plain, postJson } from "@/lib/client-api";
 import { printLetter } from "@/lib/export";
+import { MIN_SOURCE_CHARS } from "@/lib/letter";
 import { Draft, useAppStore, useT } from "@/lib/store";
 
-type Mode = "improve" | "shorten" | "translate";
+type Mode = "improve" | "shorten" | "translate" | "generate";
 
 interface Suggestion {
   mode: Mode;
@@ -63,7 +65,7 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
     el.style.height = `${el.scrollHeight}px`;
   }, [title]);
 
-  const runTool = async (mode: Mode) => {
+  const runTool = async (mode: Exclude<Mode, "generate">) => {
     const el = bodyRef.current;
     const selected =
       el && el.selectionEnd > el.selectionStart ? body.slice(el.selectionStart, el.selectionEnd).trim() : "";
@@ -92,6 +94,47 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
     }
   };
 
+  /** First draft from the CV / description entered on the first screen. */
+  const generateLetter = async () => {
+    const { rawInput, cv } = useAppStore.getState();
+    const source = buildAnalysisText(rawInput, cv?.text);
+    if (source.trim().length < MIN_SOURCE_CHARS) return showToast(t.workspace.generateNeedsInfo);
+
+    setBusy("generate");
+    setSuggestion(null);
+    try {
+      // A full letter takes ~20 s (write + fact-check, up to twice), longer than the short coaching calls.
+      const res = await postJson(
+        "/api/coach/letter",
+        { lang, scholarshipId, text: source.slice(0, 20000) },
+        AbortSignal.timeout(110_000),
+      );
+      if (res.status === 422) return showToast(t.workspace.generateNeedsInfo);
+      if (!res.ok) return showToast(t.workspace.errors[await errorKind(res)]);
+      const { body: letter } = (await res.json()) as { body?: string };
+      if (!letter?.trim()) return showToast(t.workspace.errors.failed);
+
+      if (!body.trim()) {
+        // Nothing to lose: write it straight into the empty editor.
+        onDraftChange({ body: letter });
+        showToast(t.workspace.generatedHint);
+      } else {
+        // Existing text is only replaced after an explicit click on "Replace text".
+        setSuggestion({
+          mode: "generate",
+          source: body,
+          wholeBody: true,
+          feedback: t.workspace.generatedHint,
+          alternatives: [letter],
+        });
+      }
+    } catch {
+      showToast(t.workspace.errors.failed);
+    } finally {
+      setBusy(null);
+    }
+  };
+
   /** Applies a suggestion. Only ever runs after an explicit click on "Use this". */
   const accept = (text: string) => {
     if (!suggestion) return;
@@ -113,7 +156,7 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
     showToast(ok ? t.workspace.pdfHint : t.workspace.popupBlocked);
   };
 
-  const tools: Array<{ mode: Mode; label: string }> = [
+  const tools: Array<{ mode: Exclude<Mode, "generate">; label: string }> = [
     { mode: "improve", label: t.workspace.improve },
     { mode: "shorten", label: t.workspace.shorten },
     { mode: "translate", label: t.workspace.translate },
@@ -124,6 +167,15 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
       {/* Toolbar */}
       <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-2">
         <div className="flex shrink-0 items-center gap-2 mobile:flex-wrap">
+          <button
+            type="button"
+            disabled={busy !== null}
+            onClick={generateLetter}
+            className="btn-primary flex h-8 items-center gap-1.5 whitespace-nowrap rounded-full px-[14px] text-[13px] disabled:opacity-60 mobile:h-9"
+          >
+            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            {busy === "generate" ? t.workspace.generating : t.workspace.generate}
+          </button>
           {tools.map(({ mode, label }) => (
             <button
               key={mode}
@@ -147,7 +199,14 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
         </span>
       </div>
 
-      {/* Suggestion panel (Improve / Shorten / Translate). Nothing changes until "Use this". */}
+      {busy === "generate" && (
+        <p role="status" className="mt-3 flex items-center gap-2 text-[13px] text-violet-dark">
+          <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-violet" />
+          {t.workspace.generatingHint}
+        </p>
+      )}
+
+      {/* Suggestion panel (Improve / Shorten / Translate / Generate). Nothing changes until "Use this". */}
       <AnimatePresence initial={false}>
         {suggestion && (
           <motion.div
@@ -156,10 +215,18 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
             exit={{ opacity: 0, height: 0 }}
             className="overflow-hidden"
           >
-            <div className="thin-scroll mt-4 max-h-[210px] overflow-y-auto rounded-[18px] bg-white/75 p-4 text-[13.5px] leading-[21px] text-ink">
+            <div
+              className={`thin-scroll mt-4 overflow-y-auto rounded-[18px] bg-white/75 p-4 text-[13.5px] leading-[21px] text-ink ${
+                suggestion.mode === "generate" ? "max-h-[300px]" : "max-h-[210px]"
+              }`}
+            >
               <div className="mb-2 flex items-center justify-between">
                 <span className="text-[11.5px] font-semibold uppercase tracking-[0.06em] text-violet-dark">
-                  {suggestion.mode === "translate" ? t.workspace.translation : t.workspace.suggestion}
+                  {suggestion.mode === "translate"
+                    ? t.workspace.translation
+                    : suggestion.mode === "generate"
+                      ? t.workspace.generatedLabel
+                      : t.workspace.suggestion}
                 </span>
                 <button
                   type="button"
@@ -172,21 +239,26 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
               </div>
               {suggestion.feedback && (
                 <p className="mb-2 text-muted">
-                  <span className="font-medium text-ink">{t.workspace.feedback}: </span>
+                  {suggestion.mode !== "generate" && (
+                    <span className="font-medium text-ink">{t.workspace.feedback}: </span>
+                  )}
                   {suggestion.feedback}
                 </p>
               )}
               <ul className="space-y-2">
                 {suggestion.alternatives.map((alt, i) => (
-                  <li key={i} className="rounded-2xl bg-white/80 p-3">
-                    <p className="whitespace-pre-wrap">{alt}</p>
+                  <li key={i} className="flex flex-col items-start rounded-2xl bg-white/80 p-3">
+                    {/* A long generated letter scrolls: keep the action on top so it is always reachable. */}
                     <button
                       type="button"
                       onClick={() => accept(alt)}
-                      className="btn-primary mt-2 h-8 rounded-full px-4 text-[12.5px]"
+                      className={`btn-primary h-8 rounded-full px-4 text-[12.5px] ${
+                        suggestion.mode === "generate" ? "mb-3" : "order-last mt-2"
+                      }`}
                     >
                       {suggestion.wholeBody ? t.workspace.replaceAll : t.workspace.useThis}
                     </button>
+                    <p className="w-full whitespace-pre-wrap">{alt}</p>
                   </li>
                 ))}
               </ul>
@@ -222,13 +294,24 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
           className="thin-scroll h-full w-full resize-none bg-transparent text-[16px] leading-[27px] text-ink/85 outline-none placeholder:text-muted/60"
         />
         {!body && (
-          <button
-            type="button"
-            onClick={() => onDraftChange({ body: t.workspace.exampleBody(name) })}
-            className="absolute bottom-1 left-0 text-[13px] font-medium text-violet-dark underline-offset-2 hover:underline"
-          >
-            {t.workspace.insertExample}
-          </button>
+          <div className="absolute bottom-1 left-0 flex flex-col items-start gap-2">
+            <button
+              type="button"
+              disabled={busy !== null}
+              onClick={generateLetter}
+              className="btn-primary flex h-10 items-center gap-2 rounded-full px-5 text-[14px] disabled:opacity-60"
+            >
+              <Sparkles className="h-4 w-4" aria-hidden />
+              {busy === "generate" ? t.workspace.generating : t.workspace.generateCta}
+            </button>
+            <button
+              type="button"
+              onClick={() => onDraftChange({ body: t.workspace.exampleBody(name) })}
+              className="text-[13px] font-medium text-violet-dark underline-offset-2 hover:underline"
+            >
+              {t.workspace.insertExample}
+            </button>
+          </div>
         )}
       </div>
 
