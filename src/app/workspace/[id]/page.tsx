@@ -4,9 +4,11 @@ import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Assistant } from "@/components/Assistant";
-import { DocChecklist, statusOf } from "@/components/DocChecklist";
+import { DocumentsCard } from "@/components/DocumentsCard";
 import { Editor } from "@/components/Editor";
-import { docKey, localizedName } from "@/lib/format";
+import { PracticeCard } from "@/components/PracticeCard";
+import { applicationProgress } from "@/lib/documents";
+import { localizedName } from "@/lib/format";
 import { getScholarshipById } from "@/lib/matching";
 import { useAppStore, useT } from "@/lib/store";
 import { useIsMobile } from "@/lib/useMobile";
@@ -23,6 +25,7 @@ export default function WorkspacePage() {
   const draft = useAppStore((s) => s.drafts[id]);
   const setDocStatus = useAppStore((s) => s.setDocStatus);
   const updateDraft = useAppStore((s) => s.updateDraft);
+  const setPracticeScholarship = useAppStore((s) => s.setPracticeScholarship);
 
   const scholarship = getScholarshipById(id);
 
@@ -33,9 +36,18 @@ export default function WorkspacePage() {
   if (!scholarship) return null;
 
   const documents = scholarship.documents;
-  const done = documents.filter((d) => statusOf(statuses ?? {}, docKey(d)) === "complete").length;
-  const progress = documents.length ? (done / documents.length) * 100 : 0;
+  const { done, total } = applicationProgress(statuses, documents);
+  const progress = total ? (done / total) * 100 : 0;
   const name = localizedName(scholarship, lang);
+  const openLetter = () => {
+    if (isMobile) setTab("letter");
+    // wait a frame so the letter panel is visible on mobile before it takes the focus
+    requestAnimationFrame(() => document.getElementById("letter-body")?.focus());
+  };
+  const startPractice = () => {
+    setPracticeScholarship(id);
+    router.push("/practice");
+  };
   // Desktop: panels are plain flex children. Mobile: only the active tab is shown.
   const panel = (key: typeof tab) => (!isMobile ? "contents" : tab === key ? "flex min-h-0 flex-1 flex-col" : "hidden");
 
@@ -82,14 +94,14 @@ export default function WorkspacePage() {
             <div className="mt-[18px] flex items-baseline justify-between text-[13px]">
               <span className="font-medium text-ink">{t.workspace.progress}</span>
               <span className="text-muted">
-                {done} / {documents.length}
+                {done} / {total}
               </span>
             </div>
             <div
               className="mt-[10px] h-[6px] overflow-hidden rounded-full bg-neutral-line/30"
               role="progressbar"
               aria-valuemin={0}
-              aria-valuemax={documents.length}
+              aria-valuemax={total}
               aria-valuenow={done}
               aria-label={t.workspace.progress}
             >
@@ -103,12 +115,15 @@ export default function WorkspacePage() {
             </div>
           </div>
 
-          <DocChecklist
+          <DocumentsCard
             t={t}
             documents={documents}
             statuses={statuses ?? {}}
             onChange={(key, status) => setDocStatus(id, key, status)}
+            onOpenLetter={openLetter}
           />
+
+          <PracticeCard t={t} onStart={startPractice} />
         </div>
       </div>
 

@@ -188,15 +188,6 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
             </button>
           ))}
         </div>
-        <span
-          className="ml-3 mobile:ml-0 flex min-w-0 items-center gap-[7px] whitespace-nowrap text-[12.5px] text-muted"
-          aria-live="polite"
-        >
-          <span
-            className={`h-[6px] w-[6px] shrink-0 rounded-full ${minutes === null ? "bg-neutral-line" : "bg-[#22c55e]"}`}
-          />
-          <span className="truncate">{savedLabel}</span>
-        </span>
       </div>
 
       {busy === "generate" && (
@@ -286,6 +277,7 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
       />
       <div className="relative mt-[10px] min-h-0 flex-1">
         <textarea
+          id="letter-body"
           ref={bodyRef}
           value={body}
           onChange={(e) => onDraftChange({ body: e.target.value })}
@@ -317,7 +309,15 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
 
       {/* Footer */}
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-[13px] text-muted">{t.workspace.words(countWords(body))}</span>
+        <div className="flex min-w-0 items-center gap-3 text-[13px] text-muted">
+          <span className="shrink-0 whitespace-nowrap">{t.workspace.words(countWords(body))}</span>
+          <span className="flex min-w-0 items-center gap-[7px] whitespace-nowrap text-[12.5px]" aria-live="polite">
+            <span
+              className={`h-[6px] w-[6px] shrink-0 rounded-full ${minutes === null ? "bg-neutral-line" : "bg-[#22c55e]"}`}
+            />
+            <span className="truncate">{savedLabel}</span>
+          </span>
+        </div>
         <button type="button" onClick={generatePdf} className="btn-primary h-[42px] rounded-full px-5 mobile:h-[44px]">
           {t.workspace.generatePdf}
         </button>

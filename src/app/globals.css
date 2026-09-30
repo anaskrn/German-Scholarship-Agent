@@ -146,6 +146,11 @@ body {
   background: linear-gradient(135deg, var(--violet-light), var(--pink-light));
   padding: 1.5px;
 }
+/* Optional beta card: 1.5px violet → pink gradient edge. */
+.glass-beta::before {
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  padding: 1.5px;
+}
 .glass-row {
   background: rgba(255, 255, 255, 0.42);
   border-radius: 16px;

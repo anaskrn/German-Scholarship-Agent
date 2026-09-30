@@ -36,6 +36,10 @@ interface AppState {
   setAnalysis: (a: Pick<AppState, "profile" | "matches" | "explanations" | "aiDegraded">) => void;
   setExplanations: (explanations: AppState["explanations"], degraded: boolean) => void;
 
+  /** Scholarship the student chose to rehearse the interview for (set by the workspace button). */
+  practiceScholarshipId: string | null;
+  setPracticeScholarship: (id: string | null) => void;
+
   docStatus: Record<string, Record<string, DocStatus>>;
   setDocStatus: (scholarshipId: string, docKey: string, status: DocStatus) => void;
 
@@ -70,6 +74,9 @@ export const useAppStore = create<AppState>()(
         set({ profile, matches, explanations, aiDegraded }),
       setExplanations: (explanations, aiDegraded) => set({ explanations, aiDegraded }),
 
+      practiceScholarshipId: null,
+      setPracticeScholarship: (practiceScholarshipId) => set({ practiceScholarshipId }),
+
       docStatus: {},
       setDocStatus: (id, docKey, status) =>
         set((s) => ({ docStatus: { ...s.docStatus, [id]: { ...s.docStatus[id], [docKey]: status } } })),
@@ -100,6 +107,7 @@ export const useAppStore = create<AppState>()(
         matches: s.matches,
         explanations: s.explanations,
         aiDegraded: s.aiDegraded,
+        practiceScholarshipId: s.practiceScholarshipId,
         docStatus: s.docStatus,
         drafts: s.drafts,
       }),
