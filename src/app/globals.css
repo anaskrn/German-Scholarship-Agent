@@ -266,3 +266,19 @@ input:focus-visible {
     animation: none !important;
   }
 }
+
+/* Interview practice: the dial ring turns very slowly */
+@keyframes hud-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.hud-spin {
+  animation: hud-spin 240s linear infinite;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hud-spin {
+    animation: none !important;
+  }
+}

@@ -176,3 +176,21 @@ export const LetterRequestSchema = z.object({
   /** the student's own material: typed description and/or CV text */
   text: z.string().min(1).max(20000),
 });
+
+const InterviewTurnSchema = z.object({ question: z.string().max(600), answer: z.string().max(4000) });
+
+export const FeedbackRequestSchema = z.discriminatedUnion("kind", [
+  z.object({
+    kind: z.literal("answer"),
+    lang: z.enum(["en", "de", "zh"]),
+    scholarshipId: z.string(),
+    question: z.string().max(600),
+    answer: z.string().min(1).max(4000),
+  }),
+  z.object({
+    kind: z.literal("summary"),
+    lang: z.enum(["en", "de", "zh"]),
+    scholarshipId: z.string(),
+    turns: z.array(InterviewTurnSchema).min(1).max(8),
+  }),
+]);
