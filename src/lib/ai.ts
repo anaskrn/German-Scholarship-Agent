@@ -274,9 +274,16 @@ const ISSUE_TEXT: Record<string, string> = {
   short: "The letter was too short. Develop paragraphs 2-4 with more concrete detail from the material.",
 };
 
-/** A full letter is ~700-1500 tokens of output, so the timeout is longer than for the short calls. */
+/*
+  A full letter is ~700-1500 tokens of output, so each call may take longer than the short coaching calls, and the
+  whole generation (write + fact-check, two drafts, sometimes a second round) needs 20-45 s. The letter route runs
+  with maxDuration = 60 s (the limit of every Vercel plan), so the generation works against a deadline: no call is
+  started or allowed to run past it.
+*/
+const LETTER_BUDGET_MS = 52_000;
+const LETTER_CALL_MS = 28_000;
 // No SDK retries (the fallback model is the second try) and a cap on the output so a stuck generation ends quickly.
-const LETTER_OPTIONS = { maxRetries: 0, timeout: 28_000, maxOutputTokens: 2500 } as const;
+const LETTER_OPTIONS = { maxRetries: 0, maxOutputTokens: 2500 } as const;
 /*
   ministral-14b writes noticeably richer letters than the 8b default and is available on the free tier;
   if it ever fails (quota, tier change) the letter falls back to the default model.
@@ -286,11 +293,16 @@ const LETTER_MODELS = [
   process.env.MISTRAL_MODEL || "ministral-8b-latest",
 ].filter((name, i, all) => all.indexOf(name) === i);
 
-async function withLetterModel<T>(run: (m: ReturnType<typeof mistral>) => Promise<T>): Promise<T> {
-  let lastError: unknown;
+async function withLetterModel<T>(
+  deadline: number,
+  run: (m: ReturnType<typeof mistral>, timeout: number) => Promise<T>,
+): Promise<T> {
+  let lastError: unknown = new Error("letter_deadline");
   for (const name of LETTER_MODELS) {
+    const remaining = deadline - Date.now();
+    if (remaining < 4_000) break; // not enough time left for another call
     try {
-      return await run(mistral(name));
+      return await run(mistral(name), Math.min(LETTER_CALL_MS, remaining));
     } catch (err) {
       console.warn(
         `[letter] model ${name} failed: ${(err as Error)?.name}: ${String((err as Error)?.message).slice(0, 160)}`,
@@ -314,11 +326,13 @@ async function factCheckLetter(input: {
   scholarship: Scholarship;
   material: string;
   sentences: string[];
+  deadline: number;
 }): Promise<Array<{ n: number; claim: string }>> {
-  const { output } = await withLetterModel((m) =>
+  const { output } = await withLetterModel(input.deadline, (m, timeout) =>
     generateText({
       model: m,
       ...LETTER_OPTIONS,
+      timeout,
       temperature: 0,
       output: Output.object({ schema: FactCheckSchema }),
       system: `You are a strict fact-checker for a scholarship letter written in ${LANG_NAME[input.lang]}. You get the student's material and the letter's numbered sentences.
@@ -349,6 +363,8 @@ interface LetterContext {
   scholarship: Scholarship;
   material: string;
   allowedFacts: string;
+  /** timestamp (ms) by which every call must be finished */
+  deadline: number;
 }
 
 /** Writes one draft, checks it, fact-checks it and strips what the material does not support. */
@@ -357,11 +373,12 @@ async function writeLetterCandidate(
   temperature: number,
   feedback: string[],
 ): Promise<LetterCandidate> {
-  const { lang, scholarship, material, allowedFacts } = ctx;
-  const { output } = await withLetterModel((m) =>
+  const { lang, scholarship, material, allowedFacts, deadline } = ctx;
+  const { output } = await withLetterModel(deadline, (m, timeout) =>
     generateText({
       model: m,
       ...LETTER_OPTIONS,
+      timeout,
       temperature,
       output: Output.object({ schema: LetterDraftSchema }),
       system: letterSystemPrompt(scholarship, lang, feedback),
@@ -379,7 +396,7 @@ async function writeLetterCandidate(
   if (!assessment.blocking) {
     const sentences = letterSentences(draft, lang);
     // A letter whose fact-check could not run (model error) counts as unverified and is never shown.
-    const flagged = await factCheckLetter({ lang, scholarship, material, sentences }).catch(() => null);
+    const flagged = await factCheckLetter({ lang, scholarship, material, sentences, deadline }).catch(() => null);
     checked = flagged !== null;
     if (flagged && flagged.length > 0) {
       draft = removeSentences(
@@ -411,7 +428,13 @@ export async function generateLetterWithAI(input: { lang: Lang; scholarship: Sch
 }> {
   const { lang, scholarship, source } = input;
   const material = source.slice(0, 12000);
-  const ctx: LetterContext = { lang, scholarship, material, allowedFacts: JSON.stringify(scholarship) };
+  const ctx: LetterContext = {
+    lang,
+    scholarship,
+    material,
+    allowedFacts: JSON.stringify(scholarship),
+    deadline: Date.now() + LETTER_BUDGET_MS,
+  };
 
   // Round 1: two drafts in parallel (no extra waiting time). A single draft is a gamble with small models:
   // one invents a lot and loses it again in the fact-check, the other stays close to the CV.
@@ -420,8 +443,10 @@ export async function generateLetterWithAI(input: { lang: Lang; scholarship: Sch
   for (const r of round) if (r.status === "fulfilled" && betterLetter(r.value, best)) best = r.value;
   if (!best) throw (round[0] as PromiseRejectedResult).reason;
 
-  // Round 2 (rare): only for a rejected or clearly too short result, with the problems fed back.
-  if (best.blocking || best.assessment.words < MIN_WORDS_FOR_ACCEPT * letterMinWords(lang, material)) {
+  // Round 2 (rare): only for a rejected or clearly too short result, with the problems fed back,
+  // and only if there is enough time left to finish it (write + fact-check need about 25 s).
+  const worthRetry = best.blocking || best.assessment.words < MIN_WORDS_FOR_ACCEPT * letterMinWords(lang, material);
+  if (worthRetry && ctx.deadline - Date.now() > 25_000) {
     const again = await writeLetterCandidate(ctx, 0.25, best.feedback).catch(() => null);
     if (again && betterLetter(again, best)) best = again;
   }
