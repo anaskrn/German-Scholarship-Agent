@@ -21,7 +21,9 @@ npm run build
 2. **Matches** (`/analyzing` → `/matches`): `src/lib/matching.ts` scores all 13 scholarships deterministically (0-100). `POST /api/explain` writes the "why it fits" text for the top 3 in the active language; template texts are used if the AI fails.
 3. **Apply** (`/workspace/[id]`): document checklist, letter editor and a coaching assistant (`/api/coach`, `/api/coach/suggestions`, `/api/coach/edit`). **Generate letter** (`/api/coach/letter`) writes a first motivation letter from your CV in the selected language (EN/DE/ZH); Improve / Shorten / Translate are only applied when you click "Use this"; "Generate Draft PDF" opens the print dialog. The chat assistant coaches and never writes the whole letter itself.
 
-All LLM calls live in `src/lib/ai.ts`. Facts (deadlines, criteria) only come from `data/scholarships.json`; the UI never shows past dates as current and always points to the official site.
+All Mistral calls live in `src/lib/ai.ts` (the voice provider is separate, in `src/lib/voice.ts`). Facts (deadlines, criteria) only come from `data/scholarships.json`; the UI never shows past dates as current and always points to the official site.
+
+4. **Practice** (`/practice`, optional BETA): an interview rehearsal with a voice coach, opened only from the workspace card "Interview practice". Voice runs on an ElevenLabs agent (set up with `docs/interview-agent-prompt.md`, `NEXT_PUBLIC_ELEVENLABS_AGENT_ID`); without it, or when the microphone, the free minutes or the connection fail, the screen continues in a text-only mode. Feedback (clarity / structure / authenticity) is estimated per answer by Mistral via `/api/feedback` and clearly labelled AI-estimated. A consent dialog comes first; we do not store audio.
 
 ## Loading screen
 
@@ -48,7 +50,7 @@ The letter is written by Mistral (free tier only, `ministral-14b-latest` with `m
 
 ## Privacy
 
-Profile, matches and drafts are stored only in your browser (`localStorage`). Text you write is sent to Mistral (EU) for analysis and is not logged or stored by this app.
+Profile, matches and drafts are stored only in your browser (`localStorage`). Text you write is sent to Mistral (EU) for analysis and is not logged or stored by this app. In the optional interview practice your voice is streamed live to ElevenLabs (external) after you consent; the app does not store any audio.
 
 ## Layout
 

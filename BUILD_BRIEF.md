@@ -58,8 +58,8 @@ Nav links (Start / Matches / Workspace) work from every screen.
 ### 2.1 Global navigation (all screens)
 A floating **glass pill** at the top, 1200 × 60, radius 30, 24 px from the top.
 - **Left:** logo mark (30×30, radius 10, violet→pink gradient, white letter "S") + wordmark "ScholarPath" (Outfit SemiBold 19, letter-spacing −1%).
-- **Center (exactly centered, independent of left/right widths):** links `Start`, `Matches`, `Workspace`. Active link = white pill (opacity .9) with soft shadow, dark text. Inactive = muted text.
-- **Right:** language toggle (segmented control **EN | DE | 中文**, active = white pill), text link `Sign in`, dark pill button `Get started`.
+- **Center (exactly centered, independent of left/right widths):** a 4-step stepper `Describe`, `Matches`, `Apply`, `Practice` (22 px indicator + label). Completed steps show a gradient check and are clickable (back only); the current step is a white pill (opacity .9) with soft shadow and `aria-current="step"`; upcoming steps are disabled. Connectors between steps 1-3 are 10 px gradient lines. **Step 4 (Practice) is an optional BETA step**: dashed indicator, small `BETA` tag, a *dotted* connector from step 3, and it is **never clickable in the stepper** (it is only reached from the workspace button).
+- **Right:** language toggle (segmented control **EN | DE | 中文**, active = white pill). *Owner decision:* no `Sign in` / `Get started` (single flow, no accounts yet), although the Figma frames still show them.
 
 ### 2.2 Screen 1: Landing (chat-first, very clean)
 Vertically centered hero, top padding ≈ 110 px inside the content area.
@@ -101,14 +101,10 @@ Three columns, total height 764, gaps 20: **left 290 | center flexible | right 3
 
 **Left column**
 - *Scholarship card* (glass): pill "96% MATCH" (gradient), title "Heinrich Böll Foundation" (Outfit SemiBold 24), subtitle "Heinrich-Böll-Stiftung, Germany", "Application progress 3 / 6" with a gradient progress bar.
-- *Required Documents* card (glass, fills remaining height). Rows with status icon + name + status pill:
-  - `Motivation Letter`: **in-progress** (active row = white raised row, amber ring icon, amber pill)
-  - `CV / Resume`: complete
-  - `Academic Transcript`: complete
-  - `Letter of Recommendation`: incomplete
-  - `Language Certificate (TestDaF)`: complete
-  - `Research Proposal`: incomplete
-  Status styles: complete = green check circle + green pill; in-progress = amber ring + amber pill; incomplete = gray ring + gray pill.
+- *Documents* card (glass, fills remaining height), two clearly separated parts:
+  - **WRITE HERE**: one highlighted row `Motivation Letter` with a `writing` pill (white raised row, amber ring icon). It is the only document written inside ScholarPath; clicking it moves the focus to the editor.
+  - **ADDITIONAL DOCUMENTS** (counter "3 / 5 ready", hint "Prepare these yourself. Tick off when ready."): a plain checklist from the scholarship's `documents` field (without the letter). Checkboxes only: no links, no hover highlight, no editor. Ticked rows are dimmed. Ticks are stored locally.
+- *Beta card* (gradient 1.5 px border): `OPTIONAL NEXT STEP` + `BETA` badge, "Interview practice", "Rehearse your interview with a voice coach.", full-width gradient button "Start interview practice →". This button is the **only** way into step 4.
 
 **Center: editor** (glass, radius 28, padding 36/30)
 - Toolbar: chips `Improve`, `Shorten`, `Translate to German` (soft violet pills); right side "● Saved 2m ago".
@@ -122,6 +118,15 @@ Three columns, total height 764, gaps 20: **left 290 | center flexible | right 3
 - Suggestion cards (white glass, radius 18): each has a bold title and 2–3 lines. Examples in the design: "Stronger opening", "Link to the foundation", "A question for you" (the last one has violet title and is a question to the user).
 - Bottom: chat input pill "Ask the assistant…" with a round dark send button (↑).
 - The assistant's system prompt is built per foundation from `values`, `essayFocus`, `selectionProcess` in the data.
+
+### 2.6 Screen 5: Interview practice (step 4, BETA)
+Route `/practice` (no locale segment: the app uses its own i18n). Reachable only from the workspace button; without a profile it redirects to the landing page, without a chosen scholarship to the workspace.
+- Title "Interview practice" + gradient-outlined `BETA` badge, one plain line "Experimental feature: feedback is AI-estimated and may be imperfect." The foundation name is a plain text line inside the transcript card.
+- **Center HUD** (500 px box): 150 px glass orb (states Listening / Thinking / Speaking, plus Connecting, Your turn for typing, Done), 72 radial bars driven by the real audio level (ElevenLabs input/output frequency data), one hairline ring, one dial ring with 96 ticks (every 8th longer, turning very slowly), and an inner progress ring for the question progress.
+- **Bottom:** `Repeat question` · large gradient mic button with pulse rings (mutes / unmutes) · `Skip question`; caption "Tap to answer, or just start speaking".
+- **Left card "Live transcript"**: REC timer, previous question faded, Interviewer bubble, "You" bubble with blinking cursor. **Right card "Live feedback"**: AI coach tag, Clarity / Structure / Authenticity (0-100, AI-estimated by Mistral via `/api/feedback`, averaged over the answers), Pace chip, coach tip, 5-segment progress "Question N of 5".
+- **Voice:** provider-agnostic adapter `src/lib/voice.ts` with an ElevenLabs Agents adapter (official React SDK) and a text-only fallback (microphone denied, free minutes used up, connection failed, or no agent configured). The agent prompt lives in `docs/interview-agent-prompt.md`. The API key for a private agent stays on the server (`/api/voice/signed-url`).
+- **Privacy:** a consent dialog comes first (microphone, audio goes to an external provider, we store no audio). The session ends on `End`, `Esc` and when leaving the page.
 
 ---
 
