@@ -34,11 +34,6 @@ export function Nav() {
     if (!pathname.startsWith("/workspace")) router.push(`/workspace/${matches[0].scholarshipId}`);
   };
 
-  const getStarted = () => {
-    if (pathname === "/") document.getElementById("prompt")?.focus();
-    else router.push("/");
-  };
-
   return (
     <header className="absolute left-[120px] top-6 z-50 w-[1200px]">
       <nav className="glass grid h-[60px] grid-cols-[1fr_auto_1fr] items-center rounded-[30px] px-[21px]">
@@ -94,7 +89,7 @@ export function Nav() {
           })}
         </ol>
 
-        {/* Right: language toggle, sign in, get started */}
+        {/* Right: language toggle */}
         <div className="flex items-center justify-end gap-4">
           <div
             role="group"
@@ -118,16 +113,6 @@ export function Nav() {
               </button>
             ))}
           </div>
-          <button
-            type="button"
-            onClick={() => showToast(t.nav.signInToast)}
-            className="text-[14px] font-medium text-muted transition-colors hover:text-ink"
-          >
-            {t.nav.signIn}
-          </button>
-          <button type="button" onClick={getStarted} className="btn-primary h-[38px] rounded-full px-[18px]">
-            {t.nav.getStarted}
-          </button>
         </div>
       </nav>
     </header>

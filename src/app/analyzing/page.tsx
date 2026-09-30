@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-import { runAnalysis, scholarshipCount } from "@/lib/analysis";
+import { buildAnalysisText, runAnalysis, scholarshipCount } from "@/lib/analysis";
 import { useAppStore, useT } from "@/lib/store";
 
 export default function AnalyzingPage() {
@@ -12,17 +12,19 @@ export default function AnalyzingPage() {
   const { t, lang } = useT();
   const hydrated = useAppStore((s) => s.hydrated);
   const rawInput = useAppStore((s) => s.rawInput);
+  const cv = useAppStore((s) => s.cv);
   const setAnalysis = useAppStore((s) => s.setAnalysis);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
     if (!hydrated) return;
-    if (!rawInput.trim()) {
+    const text = buildAnalysisText(rawInput, cv?.text);
+    if (!text) {
       router.replace("/");
       return;
     }
     let cancelled = false;
-    runAnalysis(rawInput, lang, (s) => !cancelled && setStep(s)).then((result) => {
+    runAnalysis(text, lang, (s) => !cancelled && setStep(s)).then((result) => {
       if (cancelled) return;
       setStep(3);
       setAnalysis(result);

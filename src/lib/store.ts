@@ -23,6 +23,10 @@ interface AppState {
   rawInput: string;
   setRawInput: (text: string) => void;
 
+  /** Text extracted from an attached PDF CV (kept in this browser only). */
+  cv: { name: string; text: string; pages: number } | null;
+  setCv: (cv: AppState["cv"]) => void;
+
   profile: Profile | null;
   matches: MatchResult[];
   /** LLM explanations for the top matches, in the language they were written in. */
@@ -54,6 +58,9 @@ export const useAppStore = create<AppState>()(
 
       rawInput: "",
       setRawInput: (rawInput) => set({ rawInput }),
+
+      cv: null,
+      setCv: (cv) => set({ cv }),
 
       profile: null,
       matches: [],
@@ -87,6 +94,7 @@ export const useAppStore = create<AppState>()(
       partialize: (s) => ({
         lang: s.lang,
         rawInput: s.rawInput,
+        cv: s.cv,
         profile: s.profile,
         matches: s.matches,
         explanations: s.explanations,

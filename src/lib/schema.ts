@@ -125,7 +125,7 @@ export interface MatchResult {
 
 // ---- API payload schemas (validated on the server) ----
 
-export const ProfileRequestSchema = z.object({ text: z.string().min(1).max(6000) });
+export const ProfileRequestSchema = z.object({ text: z.string().min(1).max(20000) });
 
 export const ExplainRequestSchema = z.object({
   lang: z.enum(["en", "de", "zh"]),

@@ -10,6 +10,11 @@ import { reasonText } from "./i18n";
 */
 
 export const TOP_N = 3;
+
+/** What is sent for profile extraction: the typed description plus the text of the attached CV, if any. */
+export function buildAnalysisText(rawInput: string, cvText: string | undefined): string {
+  return [rawInput.trim(), cvText ? `CV:\n${cvText}` : ""].filter(Boolean).join("\n\n");
+}
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function postJson<T>(url: string, body: unknown): Promise<T> {
@@ -26,7 +31,7 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
 export async function fetchProfile(text: string): Promise<{ profile: Profile; degraded: boolean }> {
   const fallback = heuristicProfile(text);
   try {
-    const { profile } = await postJson<{ profile: unknown }>("/api/profile", { text: text.slice(0, 6000) });
+    const { profile } = await postJson<{ profile: unknown }>("/api/profile", { text: text.slice(0, 18000) });
     return { profile: mergeProfiles(normalizeProfile(profile), fallback), degraded: false };
   } catch {
     return { profile: fallback, degraded: true };

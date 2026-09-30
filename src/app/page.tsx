@@ -1,23 +1,29 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, Loader2, Paperclip } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { PdfProgress, readPdfInBrowser } from "@/lib/ocr";
 import { useAppStore, useT } from "@/lib/store";
 
-const MAX_CV_CHARS = 5000;
+const SERVER_MAX_BYTES = 4 * 1024 * 1024; // above this, the PDF is read in the browser instead of uploaded
+const MAX_CV_BYTES = 15 * 1024 * 1024;
 
 export default function LandingPage() {
   const router = useRouter();
-  const { t } = useT();
+  const { t, lang } = useT();
   const rawInput = useAppStore((s) => s.rawInput);
   const setRawInput = useAppStore((s) => s.setRawInput);
+  const cv = useAppStore((s) => s.cv);
+  const setCv = useAppStore((s) => s.setCv);
   const showToast = useAppStore((s) => s.showToast);
   const fileRef = useRef<HTMLInputElement>(null);
-  const [cvName, setCvName] = useState<string | null>(null);
+  const [cvBusy, setCvBusy] = useState(false);
+  const [cvStatus, setCvStatus] = useState<PdfProgress | null>(null);
 
   const start = (text: string) => {
-    if (!text.trim()) {
+    if (cvBusy) return;
+    if (!text.trim() && !cv) {
       showToast(t.landing.emptyHint);
       document.getElementById("prompt")?.focus();
       return;
@@ -26,17 +32,48 @@ export default function LandingPage() {
     router.push("/analyzing");
   };
 
+  /**
+   * Reads the CV. Text PDFs go to /api/cv (fast). Scans, and files too big to upload, are read in the browser
+   * with OCR. Either way the resulting text is analyzed together with the description.
+   */
   const onFile = async (file: File | undefined) => {
     if (!file) return;
-    const isText = /\.(txt|md)$/i.test(file.name) || file.type.startsWith("text/");
-    if (!isText) return showToast(t.landing.cvUnsupported);
-    const text = (await file.text()).trim();
-    if (!text) return showToast(t.landing.cvEmpty);
-    // The CV text is appended to the box so the user can see exactly what will be analyzed.
-    setRawInput(`${rawInput.trim()}${rawInput.trim() ? "\n\n" : ""}${text.slice(0, MAX_CV_CHARS)}`);
-    setCvName(file.name);
-    if (fileRef.current) fileRef.current.value = "";
+    if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) return showToast(t.landing.cvNotPdf);
+    if (file.size > MAX_CV_BYTES) return showToast(t.landing.cvTooLarge);
+
+    setCvBusy(true);
+    setCvStatus({ phase: "text" });
+    try {
+      let result: { text: string; pages: number } | null = null;
+
+      if (file.size <= SERVER_MAX_BYTES) {
+        const body = new FormData();
+        body.append("file", file);
+        const res = await fetch("/api/cv", { method: "POST", body, signal: AbortSignal.timeout(40_000) });
+        const data = (await res.json()) as { text?: string; pages?: number; error?: string };
+        if (res.ok && data.text) result = { text: data.text, pages: data.pages ?? 1 };
+        else if (data.error === "not_pdf") return showToast(t.landing.cvNotPdf);
+        else if (data.error !== "no_text") return showToast(t.landing.cvFailed);
+      }
+
+      if (!result) result = await readPdfInBrowser(file, lang, setCvStatus);
+      if (result.text.replace(/\s/g, "").length < 40) return showToast(t.landing.cvNoText);
+      setCv({ name: file.name, text: result.text.slice(0, 12_000), pages: result.pages });
+    } catch {
+      showToast(t.landing.cvFailed);
+    } finally {
+      setCvBusy(false);
+      setCvStatus(null);
+      if (fileRef.current) fileRef.current.value = ""; // allows choosing the same file again
+    }
   };
+
+  const cvLabel =
+    cvStatus?.phase === "ocr"
+      ? t.landing.cvScanning(cvStatus.page, cvStatus.total)
+      : cvStatus?.phase === "ocr-load"
+        ? t.landing.cvLoadingOcr
+        : t.landing.cvReading;
 
   return (
     <div className="flex h-full flex-col items-center pt-[146px] text-center">
@@ -70,32 +107,42 @@ export default function LandingPage() {
             <input
               ref={fileRef}
               type="file"
-              accept=".txt,.md,text/plain,text/markdown"
+              accept="application/pdf,.pdf"
               className="hidden"
               onChange={(e) => onFile(e.target.files?.[0])}
             />
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="soft-tag h-[30px] rounded-full px-3 text-[12px] font-medium transition-colors hover:bg-violet/15"
-            >
-              {cvName ? t.landing.cvAttached(cvName) : t.landing.attachCv}
-            </button>
-            {cvName && (
+            {cv ? (
+              <>
+                <span className="flex h-[42px] max-w-[300px] items-center gap-2 rounded-full bg-success-bg px-4 text-[13.5px] font-semibold text-success">
+                  <Check className="h-4 w-4 shrink-0" strokeWidth={3} aria-hidden />
+                  <span className="truncate">{t.landing.cvAttached(cv.name, cv.pages)}</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setCv(null)}
+                  aria-label={t.landing.cvRemove}
+                  title={t.landing.cvRemove}
+                  className="flex h-8 w-8 items-center justify-center rounded-full text-[18px] leading-none text-muted hover:bg-white/80 hover:text-ink"
+                >
+                  ×
+                </button>
+              </>
+            ) : (
               <button
                 type="button"
-                onClick={() => setCvName(null)}
-                aria-label={t.landing.cvRemove}
-                title={t.landing.cvRemove}
-                className="h-6 w-6 rounded-full text-[15px] leading-none text-muted hover:bg-white/70 hover:text-ink"
+                disabled={cvBusy}
+                onClick={() => fileRef.current?.click()}
+                className="soft-tag flex h-[42px] items-center gap-2 rounded-full border border-violet/25 bg-violet/[0.12] px-4 text-[13.5px] font-semibold transition-all hover:bg-violet/20 hover:shadow-[0_6px_16px_-6px_rgba(124,58,237,0.45)] disabled:cursor-wait"
               >
-                ×
+                {cvBusy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Paperclip className="h-4 w-4" aria-hidden />}
+                {cvBusy ? cvLabel : t.landing.attachCv}
               </button>
             )}
           </div>
           <button
             type="button"
             onClick={() => start(rawInput)}
+            disabled={cvBusy}
             className="btn-primary flex h-[42px] items-center gap-2 rounded-full px-5"
           >
             {t.landing.match}
