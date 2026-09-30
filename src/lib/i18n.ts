@@ -28,7 +28,8 @@ const en = {
     cvRemove: "Remove CV",
     cvNotPdf: "Please choose a PDF file.",
     cvTooLarge: "This PDF is larger than 15 MB. Please use a smaller file.",
-    cvNoText: "Could not read any text in this PDF, even with text recognition. Please try a clearer scan or a text-based PDF.",
+    cvNoText:
+      "Could not read any text in this PDF, even with text recognition. Please try a clearer scan or a text-based PDF.",
     cvFailed: "Could not read this PDF. Please try another file.",
     match: "Match scholarships",
     examplesLabel: "Try these examples",
@@ -39,7 +40,8 @@ const en = {
       "No German-language requirement",
     ],
     emptyHint: "Write a few words about yourself or attach your CV.",
-    privacy: "Your text is sent to an external AI service (Mistral, EU) to analyze it. Nothing is stored on our servers.",
+    privacy:
+      "Your text is sent to an external AI service (Mistral, EU) to analyze it. Nothing is stored on our servers.",
   },
   analyzing: {
     title: (n: number) => `Analyzing ${n} scholarships…`,
@@ -71,7 +73,8 @@ const en = {
     documents: "Documents",
     officialSite: "Open official site",
     verified: (date: string) => `Last verified: ${date}. Always verify on the official site.`,
-    disclaimer: "Unofficial community project, not affiliated with any foundation. Results are orientation, not a guarantee.",
+    disclaimer:
+      "Unofficial community project, not affiliated with any foundation. Results are orientation, not a guarantee.",
     faithUnknown:
       "This foundation is denominational. Eligibility depends on your faith community, so check the official criteria.",
     faithMismatch: "Based on what you told us, this foundation's denominational requirement may not fit you.",
@@ -205,7 +208,8 @@ const de: Dict = {
     cvRemove: "Lebenslauf entfernen",
     cvNotPdf: "Bitte wähle eine PDF-Datei.",
     cvTooLarge: "Diese PDF ist größer als 15 MB. Bitte verwende eine kleinere Datei.",
-    cvNoText: "In dieser PDF konnte auch mit Texterkennung kein Text gelesen werden. Bitte versuche einen klareren Scan oder eine textbasierte PDF.",
+    cvNoText:
+      "In dieser PDF konnte auch mit Texterkennung kein Text gelesen werden. Bitte versuche einen klareren Scan oder eine textbasierte PDF.",
     cvFailed: "Diese PDF konnte nicht gelesen werden. Bitte versuche eine andere Datei.",
     match: "Stipendien finden",
     examplesLabel: "Probiere diese Beispiele",
@@ -253,7 +257,8 @@ const de: Dict = {
       "Inoffizielles Community-Projekt, mit keiner Stiftung verbunden. Ergebnisse dienen der Orientierung, nicht als Garantie.",
     faithUnknown:
       "Diese Stiftung ist konfessionell gebunden. Die Förderfähigkeit hängt von deiner Glaubensgemeinschaft ab, prüfe daher die offiziellen Kriterien.",
-    faithMismatch: "Nach deinen Angaben passt die konfessionelle Voraussetzung dieser Stiftung möglicherweise nicht zu dir.",
+    faithMismatch:
+      "Nach deinen Angaben passt die konfessionelle Voraussetzung dieser Stiftung möglicherweise nicht zu dir.",
     whyFits: "Warum es passt",
   },
   workspace: {
@@ -309,7 +314,8 @@ const de: Dict = {
     },
     tips: {
       openingTitle: "Stärkerer Einstieg",
-      openingText: "Beginne mit einem konkreten Moment, der deinen Weg geprägt hat, statt mit einer allgemeinen Interessensbekundung.",
+      openingText:
+        "Beginne mit einem konkreten Moment, der deinen Weg geprägt hat, statt mit einer allgemeinen Interessensbekundung.",
       linkTitle: "Bezug zur Stiftung",
       linkText: (name: string, values: string) =>
         `${name} legt Wert auf ${values}. Verknüpfe eine eigene Erfahrung mit einem dieser Werte.`,
@@ -536,7 +542,9 @@ export function reasonText(reason: Reason, lang: Lang, tagFor: (a: Affinity) => 
       const list = reason.topics.map((topic) => t.topics[topic]);
       const joiner = lang === "en" ? " and " : lang === "de" ? " und " : "、";
       const text =
-        list.length > 1 ? list.slice(0, -1).join(lang === "zh" ? "、" : ", ") + joiner + list[list.length - 1] : list[0];
+        list.length > 1
+          ? list.slice(0, -1).join(lang === "zh" ? "、" : ", ") + joiner + list[list.length - 1]
+          : list[0];
       return t.reasons.topics(text);
     }
     case "affinity":

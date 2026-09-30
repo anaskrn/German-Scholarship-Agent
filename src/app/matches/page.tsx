@@ -60,7 +60,12 @@ export default function MatchesPage() {
             </span>
           )}
         </div>
-        <button type="button" onClick={() => router.push("/")} className="glass lift h-[42px] rounded-full px-[19px] text-[14px] font-medium text-ink mobile:h-[44px]" style={{ borderRadius: 9999 }}>
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="glass lift h-[42px] rounded-full px-[19px] text-[14px] font-medium text-ink mobile:h-[44px]"
+          style={{ borderRadius: 9999 }}
+        >
           {t.matches.refine}
         </button>
       </div>

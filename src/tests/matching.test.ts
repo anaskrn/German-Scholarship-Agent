@@ -15,7 +15,9 @@ describe("matchScholarships", () => {
   });
 
   it("puts the matching party foundation first when the user names an affinity", () => {
-    const p = heuristicProfile("I study political science, I am close to the Green party and care about climate and democracy");
+    const p = heuristicProfile(
+      "I study political science, I am close to the Green party and care about climate and democracy",
+    );
     expect(matchScholarships(p)[0].scholarshipId).toBe("boell");
   });
 
@@ -65,7 +67,12 @@ describe("profile helpers", () => {
   });
 
   it("normalizes junk model output and merges with the fallback", () => {
-    const n = normalizeProfile({ phase: "MASTER", religion: "pastafarian", topics: ["ecology", "nonsense"], gradesBand: 5 });
+    const n = normalizeProfile({
+      phase: "MASTER",
+      religion: "pastafarian",
+      topics: ["ecology", "nonsense"],
+      gradesBand: 5,
+    });
     expect(n.phase).toBe("master");
     expect(n.religion).toBeNull();
     expect(n.topics).toEqual(["ecology"]);

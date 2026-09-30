@@ -65,7 +65,8 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
 
   const runTool = async (mode: Mode) => {
     const el = bodyRef.current;
-    const selected = el && el.selectionEnd > el.selectionStart ? body.slice(el.selectionStart, el.selectionEnd).trim() : "";
+    const selected =
+      el && el.selectionEnd > el.selectionStart ? body.slice(el.selectionStart, el.selectionEnd).trim() : "";
     const wholeBody = mode === "translate" && !selected;
     const source = selected || (wholeBody ? body.trim() : paragraphAt(body, el?.selectionStart ?? 0));
 
@@ -135,8 +136,13 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
             </button>
           ))}
         </div>
-        <span className="ml-3 mobile:ml-0 flex min-w-0 items-center gap-[7px] whitespace-nowrap text-[12.5px] text-muted" aria-live="polite">
-          <span className={`h-[6px] w-[6px] shrink-0 rounded-full ${minutes === null ? "bg-neutral-line" : "bg-[#22c55e]"}`} />
+        <span
+          className="ml-3 mobile:ml-0 flex min-w-0 items-center gap-[7px] whitespace-nowrap text-[12.5px] text-muted"
+          aria-live="polite"
+        >
+          <span
+            className={`h-[6px] w-[6px] shrink-0 rounded-full ${minutes === null ? "bg-neutral-line" : "bg-[#22c55e]"}`}
+          />
           <span className="truncate">{savedLabel}</span>
         </span>
       </div>
@@ -236,4 +242,3 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
     </section>
   );
 }
-

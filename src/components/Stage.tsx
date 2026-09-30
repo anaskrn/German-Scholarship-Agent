@@ -60,7 +60,9 @@ export function Stage({ children }: { children: React.ReactNode }) {
           style={{ paddingTop: "env(safe-area-inset-top)", paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <Nav />
-          <main className="thin-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4 pt-3">{children}</main>
+          <main className="thin-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4 pt-3">
+            {children}
+          </main>
           <Toast className="absolute bottom-6 left-4 right-4 px-5 py-3 text-center" />
         </div>
       </>

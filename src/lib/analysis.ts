@@ -1,5 +1,5 @@
 import { mergeProfiles, heuristicProfile, normalizeProfile } from "./profile";
-import { getAllScholarships, getScholarshipById, matchScholarships } from "./matching";
+import { getAllScholarships, matchScholarships } from "./matching";
 import { Lang, MatchResult, Profile, Reason } from "./schema";
 import { reasonText } from "./i18n";
 
@@ -28,7 +28,7 @@ async function postJson<T>(url: string, body: unknown): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-export async function fetchProfile(text: string): Promise<{ profile: Profile; degraded: boolean }> {
+async function fetchProfile(text: string): Promise<{ profile: Profile; degraded: boolean }> {
   const fallback = heuristicProfile(text);
   try {
     const { profile } = await postJson<{ profile: unknown }>("/api/profile", { text: text.slice(0, 18000) });
@@ -56,7 +56,7 @@ export async function fetchExplanations(
 }
 
 /** Template explanation built from the structured reasons (works without any LLM). */
-export function fallbackExplanation(match: MatchResult, lang: Lang): string {
+function fallbackExplanation(match: MatchResult, lang: Lang): string {
   const tagFor = (a: string) => {
     const s = getAllScholarships().find((x) => x.affinity === a);
     return s ? s.tag[lang] : a;
@@ -105,7 +105,10 @@ export function runAnalysis(text: string, lang: Lang, onStep: (step: number) => 
     await delay(600);
 
     onStep(2);
-    const [{ byId, degraded: explainDegraded }] = await Promise.all([fetchExplanations(profile, matches, lang), delay(500)]);
+    const [{ byId, degraded: explainDegraded }] = await Promise.all([
+      fetchExplanations(profile, matches, lang),
+      delay(500),
+    ]);
 
     const remaining = 1800 - (Date.now() - started);
     if (remaining > 0) await delay(remaining);
@@ -124,9 +127,4 @@ export function runAnalysis(text: string, lang: Lang, onStep: (step: number) => 
 
 export function scholarshipCount(): number {
   return getAllScholarships().length;
-}
-
-export function displayName(id: string, lang: Lang): string {
-  const s = getScholarshipById(id);
-  return s ? s.displayName[lang] ?? s.displayName.en : id;
 }

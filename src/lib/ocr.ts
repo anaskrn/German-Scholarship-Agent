@@ -13,10 +13,7 @@ const RENDER_SCALE = 3; // sharper canvas = better OCR
 const CONFIDENCE_OK = 70; // below this, try the Chinese model as well
 const CONFIDENCE_MIN = 40; // below this, the text is noise
 
-export type PdfProgress =
-  | { phase: "text" }
-  | { phase: "ocr-load" }
-  | { phase: "ocr"; page: number; total: number };
+export type PdfProgress = { phase: "text" } | { phase: "ocr-load" } | { phase: "ocr"; page: number; total: number };
 
 export interface PdfResult {
   text: string;
@@ -41,8 +38,7 @@ export async function readPdfInBrowser(
   for (let i = 1; i <= total; i++) {
     const page = await doc.getPage(i);
     const content = await page.getTextContent();
-    text +=
-      content.items.map((it) => ("str" in it ? it.str + (it.hasEOL ? "\n" : " ") : "")).join("") + "\n";
+    text += content.items.map((it) => ("str" in it ? it.str + (it.hasEOL ? "\n" : " ") : "")).join("") + "\n";
   }
   if (clean(text).length >= 40) return { text: clean(text), pages: doc.numPages, usedOcr: false };
 

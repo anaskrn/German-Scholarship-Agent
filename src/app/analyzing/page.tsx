@@ -108,7 +108,9 @@ function StepRow({ label, state }: { label: string; state: "done" | "active" | "
           className={`h-5 w-5 rounded-full border-[1.5px] ${state === "active" ? "border-violet-light" : "border-neutral-line/70"}`}
         />
       )}
-      <span className={state === "active" ? "text-violet-dark" : state === "done" ? "text-ink" : "text-muted"}>{label}</span>
+      <span className={state === "active" ? "text-violet-dark" : state === "done" ? "text-ink" : "text-muted"}>
+        {label}
+      </span>
     </motion.li>
   );
 }

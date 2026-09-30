@@ -22,19 +22,131 @@ export const emptyProfile: Profile = {
 };
 
 const TOPIC_KEYWORDS: Record<Topic, string[]> = {
-  ecology: ["ecolog", "environment", "climate", "sustainab", "renewable", "energy", "umwelt", "klima", "nachhaltig", "energie", "环境", "气候", "可持续", "能源", "生态"],
-  social: ["social", "volunteer", "charity", "community", "ehrenamt", "sozial", "gemeinschaft", "志愿", "社会", "公益", "社区"],
+  ecology: [
+    "ecolog",
+    "environment",
+    "climate",
+    "sustainab",
+    "renewable",
+    "energy",
+    "umwelt",
+    "klima",
+    "nachhaltig",
+    "energie",
+    "环境",
+    "气候",
+    "可持续",
+    "能源",
+    "生态",
+  ],
+  social: [
+    "social",
+    "volunteer",
+    "charity",
+    "community",
+    "ehrenamt",
+    "sozial",
+    "gemeinschaft",
+    "志愿",
+    "社会",
+    "公益",
+    "社区",
+  ],
   politics: ["politic", "policy", "government", "politik", "politisch", "政治", "政策"],
   democracy: ["democra", "human rights", "civic", "demokratie", "menschenrecht", "民主", "人权"],
-  business: ["business", "econom", "entrepreneur", "startup", "start-up", "management", "finance", "wirtschaft", "unternehm", "gründ", "商", "经济", "创业", "管理", "金融"],
-  technology: ["software", "computer", "informatic", "engineering", "technolog", "machine learning", "artificial intelligence", "data science", "informatik", "ingenieur", "计算机", "软件", "工程", "技术", "人工智能"],
-  research: ["research", "science", "phd", "academic", "thesis", "forschung", "wissenschaft", "promotion", "研究", "科学", "学术", "论文"],
+  business: [
+    "business",
+    "econom",
+    "entrepreneur",
+    "startup",
+    "start-up",
+    "management",
+    "finance",
+    "wirtschaft",
+    "unternehm",
+    "gründ",
+    "商",
+    "经济",
+    "创业",
+    "管理",
+    "金融",
+  ],
+  technology: [
+    "software",
+    "computer",
+    "informatic",
+    "engineering",
+    "technolog",
+    "machine learning",
+    "artificial intelligence",
+    "data science",
+    "informatik",
+    "ingenieur",
+    "计算机",
+    "软件",
+    "工程",
+    "技术",
+    "人工智能",
+  ],
+  research: [
+    "research",
+    "science",
+    "phd",
+    "academic",
+    "thesis",
+    "forschung",
+    "wissenschaft",
+    "promotion",
+    "研究",
+    "科学",
+    "学术",
+    "论文",
+  ],
   education: ["education", "teaching", "teacher", "school", "bildung", "lehr", "schule", "教育", "教学"],
   law: ["law", "legal", "jura", "recht", "法律", "法学"],
   health: ["health", "medic", "nursing", "gesundheit", "medizin", "健康", "医学"],
-  equality: ["equality", "gender", "diversity", "inclusion", "discriminat", "gleichstellung", "vielfalt", "平等", "性别", "多元"],
-  international: ["international", "erasmus", "abroad", "exchange", "intercultural", "ausland", "austausch", "interkulturell", "国际", "留学", "交换", "跨文化"],
-  culture: ["culture", "art", "music", "history", "philosoph", "literature", "kultur", "musik", "geschichte", "文化", "艺术", "音乐", "历史", "哲学"],
+  equality: [
+    "equality",
+    "gender",
+    "diversity",
+    "inclusion",
+    "discriminat",
+    "gleichstellung",
+    "vielfalt",
+    "平等",
+    "性别",
+    "多元",
+  ],
+  international: [
+    "international",
+    "erasmus",
+    "abroad",
+    "exchange",
+    "intercultural",
+    "ausland",
+    "austausch",
+    "interkulturell",
+    "国际",
+    "留学",
+    "交换",
+    "跨文化",
+  ],
+  culture: [
+    "culture",
+    "art",
+    "music",
+    "history",
+    "philosoph",
+    "literature",
+    "kultur",
+    "musik",
+    "geschichte",
+    "文化",
+    "艺术",
+    "音乐",
+    "历史",
+    "哲学",
+  ],
   faith: ["church", "faith", "religio", "kirche", "glaube", "gemeinde", "教会", "信仰", "宗教"],
   labor: ["trade union", "labor", "labour", "worker", "gewerkschaft", "arbeiter", "工会", "劳工", "工人"],
 };
@@ -45,7 +157,7 @@ function keywordMatches(text: string, kw: string): boolean {
   return text.includes(kw);
 }
 
-export function topicsFromText(text: string): Topic[] {
+function topicsFromText(text: string): Topic[] {
   const t = text.toLowerCase();
   return TOPICS.filter((topic) => TOPIC_KEYWORDS[topic].some((kw) => keywordMatches(t, kw)));
 }
@@ -57,7 +169,10 @@ const FIELDS: Array<[RegExp, string]> = [
   [/econom|business|finance|management|wirtschaft|经济|金融|管理/i, "Economics / Business"],
   [/law|jura|rechtswissenschaft|法学|法律/i, "Law"],
   [/medic|medizin|nursing|医学/i, "Medicine"],
-  [/physics|chemistry|biology|mathematics|maths|physik|chemie|biologie|mathematik|物理|化学|生物|数学/i, "Natural Sciences"],
+  [
+    /physics|chemistry|biology|mathematics|maths|physik|chemie|biologie|mathematik|物理|化学|生物|数学/i,
+    "Natural Sciences",
+  ],
   [/politic|sociolog|political science|politik|soziologie|政治|社会学/i, "Social Sciences"],
   [/history|philosoph|literature|linguistic|geschichte|philosophie|literatur|历史|哲学|文学/i, "Humanities"],
   [/education|pedagog|lehramt|教育/i, "Education"],
@@ -85,7 +200,12 @@ export function heuristicProfile(text: string): Profile {
   else if (has(/\b(abitur|high[- ]school|pre-?university|schüler\w*|gymnasium)\b|高中/)) phase = "pre-university";
 
   let gradesBand: Profile["gradesBand"] = null;
-  if (has(/top of (my|the) class|excellent|outstanding|summa cum|straight a|sehr gut|\b1[.,][0-3]\b|gpa (of )?(3\.[7-9]|4\.0)|优秀|top\s?\d+%|jahrgangsbest/)) gradesBand = "excellent";
+  if (
+    has(
+      /top of (my|the) class|excellent|outstanding|summa cum|straight a|sehr gut|\b1[.,][0-3]\b|gpa (of )?(3\.[7-9]|4\.0)|优秀|top\s?\d+%|jahrgangsbest/,
+    )
+  )
+    gradesBand = "excellent";
   else if (has(/\bgood grades|\bgut\b|\b2[.,][0-3]\b|成绩(良好|不错)/)) gradesBand = "good";
 
   let religion: Profile["religion"] = null;
@@ -102,7 +222,11 @@ export function heuristicProfile(text: string): Profile {
   else if (has(/\bcdu\b|christian democrat|christdemokrat|基民盟/)) politicalAffinity = "cdu";
   else if (has(/die linke|left party|linkspartei|左翼党/)) politicalAffinity = "linke";
 
-  const firstGeneration = has(/first[- ]generation|first in my family|non-academic|arbeiterkind|nicht-?akademisch|第一代大学生|家里第一个/) ? true : null;
+  const firstGeneration = has(
+    /first[- ]generation|first in my family|non-academic|arbeiterkind|nicht-?akademisch|第一代大学生|家里第一个/,
+  )
+    ? true
+    : null;
   const unionMember = has(/union member|gewerkschaftsmitglied|member of (a |the )?union|工会会员/) ? true : null;
 
   const fieldHit = FIELDS.find(([re]) => re.test(text));

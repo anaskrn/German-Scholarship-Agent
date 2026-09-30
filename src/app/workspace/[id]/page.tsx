@@ -52,7 +52,9 @@ export default function WorkspacePage() {
               aria-selected={tab === key}
               onClick={() => setTab(key)}
               className={`h-10 flex-1 rounded-full text-[13.5px] transition-all ${
-                tab === key ? "bg-white font-semibold text-ink shadow-[0_2px_10px_-3px_rgba(75,47,168,0.3)]" : "font-medium text-muted"
+                tab === key
+                  ? "bg-white font-semibold text-ink shadow-[0_2px_10px_-3px_rgba(75,47,168,0.3)]"
+                  : "font-medium text-muted"
               }`}
             >
               {t.workspace.tabs[key]}
@@ -63,61 +65,67 @@ export default function WorkspacePage() {
 
       {/* All panels stay mounted (chat and editor state survive tab switches); mobile shows one at a time. */}
       <div className={panel("docs")}>
-      {/* Left: scholarship + documents */}
-      <div className="flex h-full w-[290px] shrink-0 flex-col gap-4 mobile:w-full mobile:min-h-0 mobile:flex-1 mobile:shrink mobile:overflow-y-auto">
-        <div className="glass px-[23px] pb-[22px] pt-[23px]">
-          <span
-            className="inline-flex h-6 items-center rounded-full px-3 text-[10.5px] font-semibold tracking-[0.04em] text-white"
-            style={{ background: "linear-gradient(135deg, var(--violet), var(--pink-deep))" }}
-          >
-            {match ? t.workspace.matchPill(match.score) : t.workspace.noMatchPill}
-          </span>
-          <h1 className="mt-[14px] font-display text-[24px] font-semibold leading-[29px] tracking-[-0.015em] text-ink">{name}</h1>
-          <p className="mt-2 text-[13px] leading-[18px] text-muted">{t.workspace.subtitle(scholarship.name)}</p>
-
-          <div className="mt-[18px] flex items-baseline justify-between text-[13px]">
-            <span className="font-medium text-ink">{t.workspace.progress}</span>
-            <span className="text-muted">
-              {done} / {documents.length}
+        {/* Left: scholarship + documents */}
+        <div className="flex h-full w-[290px] shrink-0 flex-col gap-4 mobile:w-full mobile:min-h-0 mobile:flex-1 mobile:shrink mobile:overflow-y-auto">
+          <div className="glass px-[23px] pb-[22px] pt-[23px]">
+            <span
+              className="inline-flex h-6 items-center rounded-full px-3 text-[10.5px] font-semibold tracking-[0.04em] text-white"
+              style={{ background: "linear-gradient(135deg, var(--violet), var(--pink-deep))" }}
+            >
+              {match ? t.workspace.matchPill(match.score) : t.workspace.noMatchPill}
             </span>
+            <h1 className="mt-[14px] font-display text-[24px] font-semibold leading-[29px] tracking-[-0.015em] text-ink">
+              {name}
+            </h1>
+            <p className="mt-2 text-[13px] leading-[18px] text-muted">{t.workspace.subtitle(scholarship.name)}</p>
+
+            <div className="mt-[18px] flex items-baseline justify-between text-[13px]">
+              <span className="font-medium text-ink">{t.workspace.progress}</span>
+              <span className="text-muted">
+                {done} / {documents.length}
+              </span>
+            </div>
+            <div
+              className="mt-[10px] h-[6px] overflow-hidden rounded-full bg-neutral-line/30"
+              role="progressbar"
+              aria-valuemin={0}
+              aria-valuemax={documents.length}
+              aria-valuenow={done}
+              aria-label={t.workspace.progress}
+            >
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: "linear-gradient(90deg, var(--violet), var(--pink))" }}
+                initial={false}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
           </div>
-          <div
-            className="mt-[10px] h-[6px] overflow-hidden rounded-full bg-neutral-line/30"
-            role="progressbar"
-            aria-valuemin={0}
-            aria-valuemax={documents.length}
-            aria-valuenow={done}
-            aria-label={t.workspace.progress}
-          >
-            <motion.div
-              className="h-full rounded-full"
-              style={{ background: "linear-gradient(90deg, var(--violet), var(--pink))" }}
-              initial={false}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </div>
+
+          <DocChecklist
+            t={t}
+            documents={documents}
+            statuses={statuses ?? {}}
+            onChange={(key, status) => setDocStatus(id, key, status)}
+          />
         </div>
-
-        <DocChecklist
-          t={t}
-          documents={documents}
-          statuses={statuses ?? {}}
-          onChange={(key, status) => setDocStatus(id, key, status)}
-        />
-      </div>
-
       </div>
 
       {/* Center: editor */}
       <div className={panel("letter")}>
-      <Editor key={`editor-${id}-${lang}`} scholarshipId={id} name={name} draft={draft} onDraftChange={(patch) => updateDraft(id, patch)} />
-
+        <Editor
+          key={`editor-${id}-${lang}`}
+          scholarshipId={id}
+          name={name}
+          draft={draft}
+          onDraftChange={(patch) => updateDraft(id, patch)}
+        />
       </div>
 
       {/* Right: assistant */}
       <div className={panel("assistant")}>
-      <Assistant key={`assistant-${id}-${lang}`} scholarship={scholarship} draft={draft?.body ?? ""} />
+        <Assistant key={`assistant-${id}-${lang}`} scholarship={scholarship} draft={draft?.body ?? ""} />
       </div>
     </div>
   );

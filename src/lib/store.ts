@@ -66,7 +66,8 @@ export const useAppStore = create<AppState>()(
       matches: [],
       explanations: null,
       aiDegraded: false,
-      setAnalysis: ({ profile, matches, explanations, aiDegraded }) => set({ profile, matches, explanations, aiDegraded }),
+      setAnalysis: ({ profile, matches, explanations, aiDegraded }) =>
+        set({ profile, matches, explanations, aiDegraded }),
       setExplanations: (explanations, aiDegraded) => set({ explanations, aiDegraded }),
 
       docStatus: {},

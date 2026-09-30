@@ -4,13 +4,28 @@ import { motion } from "framer-motion";
 import { useId } from "react";
 
 /** Circular progress ring with a violet→pink arc. The arc animates from 0 to `value`. */
-export function MatchRing({ value, size = 68, stroke = 5, label }: { value: number; size?: number; stroke?: number; label?: string }) {
+export function MatchRing({
+  value,
+  size = 68,
+  stroke = 5,
+  label,
+}: {
+  value: number;
+  size?: number;
+  stroke?: number;
+  label?: string;
+}) {
   const id = useId();
   const r = (size - stroke) / 2;
   const c = size / 2;
 
   return (
-    <div className="relative shrink-0" style={{ width: size, height: size }} role="img" aria-label={label ?? `${value}%`}>
+    <div
+      className="relative shrink-0"
+      style={{ width: size, height: size }}
+      role="img"
+      aria-label={label ?? `${value}%`}
+    >
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="-rotate-90">
         <defs>
           <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">

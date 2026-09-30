@@ -39,7 +39,9 @@ export async function POST(req: Request) {
         }
       },
     });
-    return new Response(stream, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" } });
+    return new Response(stream, {
+      headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+    });
   } catch (err) {
     return aiFailure("coach", err);
   }

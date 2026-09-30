@@ -1,10 +1,12 @@
 Project: ScholarPath, AI scholarship finder for Germany (13 Begabtenförderungswerke first). Read BUILD_BRIEF.md.
-Stack: Next.js App Router, TypeScript strict, Tailwind + CSS variables, shadcn/ui, Framer Motion, Vercel AI SDK (Mistral), Zod, next-intl (en/de/zh), Vitest.
+Stack: Next.js App Router, TypeScript strict, Tailwind + CSS variables, shadcn/ui, Framer Motion, Vercel AI SDK (Mistral), Zod, a built-in i18n dictionary in src/lib/i18n.ts (en/de/zh), Vitest.
 - Match the Lavender design in BUILD_BRIEF.md section 4. Tokens live in CSS variables so a dark "Obsidian + Lime" theme can be swapped in.
 - All LLM calls go through src/lib/ai.ts only. Matching is deterministic in src/lib/matching.ts; the LLM only extracts the profile and writes explanations. Never invent facts; use only data/scholarships.json.
 - The writing assistant coaches; it never writes a full essay on request.
 - Sensitive answers (religion, politics, migration, union) are optional, never logged, never stored server-side.
 - The landing page shows no scholarship names.
-- No hard-coded UI strings: use next-intl message files.
+- No hard-coded UI strings: add them to src/lib/i18n.ts in all three languages (TypeScript fails the build if one is missing).
+- Desktop is a 1440x900 canvas scaled to fit (Stage.tsx); below 900px a fluid mobile layout is used via the `mobile:` Tailwind variant and useIsMobile(). The page itself never scrolls.
+- CV upload is PDF-only: text PDFs via /api/cv, scans via in-browser OCR (src/lib/ocr.ts).
 - Small focused components; keep the app runnable after every change; run lint, tests and build before finishing a task.
 - Never commit secrets. Code/comments/commits in English.

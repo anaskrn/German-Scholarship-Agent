@@ -82,7 +82,9 @@ export default function LandingPage() {
         <span className="text-gradient block">{t.landing.headline2}</span>
       </h1>
 
-      <p className="mt-[14px] h-[60px] max-w-[680px] text-[19px] leading-[30px] text-muted mobile:mt-3 mobile:h-auto mobile:text-[15.5px] mobile:leading-[24px]">{t.landing.subline}</p>
+      <p className="mt-[14px] h-[60px] max-w-[680px] text-[19px] leading-[30px] text-muted mobile:mt-3 mobile:h-auto mobile:text-[15.5px] mobile:leading-[24px]">
+        {t.landing.subline}
+      </p>
 
       {/* Prompt box */}
       <div className="glass glass-strong mt-[34px] w-[780px] px-[27px] pb-[21px] pt-[22px] text-left mobile:mt-6 mobile:w-full mobile:px-4 mobile:pb-4 mobile:pt-4 focus-within:shadow-[0_16px_44px_-8px_rgba(75,47,168,0.22)]">
@@ -134,7 +136,11 @@ export default function LandingPage() {
                 onClick={() => fileRef.current?.click()}
                 className="soft-tag flex h-[42px] items-center gap-2 mobile:min-h-[44px] mobile:w-full mobile:justify-center rounded-full border border-violet/25 bg-violet/[0.12] px-4 text-[13.5px] font-semibold transition-all hover:bg-violet/20 hover:shadow-[0_6px_16px_-6px_rgba(124,58,237,0.45)] disabled:cursor-wait"
               >
-                {cvBusy ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Paperclip className="h-4 w-4" aria-hidden />}
+                {cvBusy ? (
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                ) : (
+                  <Paperclip className="h-4 w-4" aria-hidden />
+                )}
                 {cvBusy ? cvLabel : t.landing.attachCv}
               </button>
             )}
@@ -167,7 +173,9 @@ export default function LandingPage() {
         ))}
       </div>
 
-      <p className="absolute bottom-1 left-0 right-0 text-center text-[11.5px] text-muted/80 mobile:static mobile:mt-6 mobile:px-2 mobile:pb-2">{t.landing.privacy}</p>
+      <p className="absolute bottom-1 left-0 right-0 text-center text-[11.5px] text-muted/80 mobile:static mobile:mt-6 mobile:px-2 mobile:pb-2">
+        {t.landing.privacy}
+      </p>
     </div>
   );
 }

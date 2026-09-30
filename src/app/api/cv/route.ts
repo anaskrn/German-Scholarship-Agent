@@ -32,7 +32,11 @@ export async function POST(req: Request) {
     const { text, totalPages } = await extractText(pdf, { mergePages: true });
     const clean = cleanExtractedText(text);
     if (clean.length < 40) return NextResponse.json({ error: "no_text" }, { status: 422 });
-    return NextResponse.json({ text: clean.slice(0, MAX_CHARS), pages: totalPages, truncated: clean.length > MAX_CHARS });
+    return NextResponse.json({
+      text: clean.slice(0, MAX_CHARS),
+      pages: totalPages,
+      truncated: clean.length > MAX_CHARS,
+    });
   } catch {
     // Corrupted or password-protected PDF
     return NextResponse.json({ error: "unreadable" }, { status: 422 });

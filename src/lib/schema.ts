@@ -23,7 +23,7 @@ export const TOPICS = [
 ] as const;
 export type Topic = (typeof TOPICS)[number];
 
-export const AFFINITIES = [
+const AFFINITIES = [
   "neutral",
   "catholic",
   "protestant",
@@ -42,13 +42,13 @@ export type Affinity = (typeof AFFINITIES)[number];
 
 export const FAITH_AFFINITIES: Affinity[] = ["catholic", "protestant", "jewish", "muslim"];
 
-export const LocalizedStringSchema = z.object({
+const LocalizedStringSchema = z.object({
   en: z.string(),
   de: z.string(),
   zh: z.string().optional(),
 });
 
-export const DeadlineSchema = z.object({
+const DeadlineSchema = z.object({
   label: z.string(),
   date: z.string().nullable(),
   note: z.string().optional(),
@@ -142,7 +142,7 @@ export const ExplainRequestSchema = z.object({
     .max(5),
 });
 
-export const ChatMessageSchema = z.object({
+const ChatMessageSchema = z.object({
   role: z.enum(["user", "assistant"]),
   content: z.string().max(8000),
 });

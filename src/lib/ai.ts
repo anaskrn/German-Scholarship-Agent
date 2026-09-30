@@ -19,14 +19,15 @@ const CALL_OPTIONS = { maxRetries: 2, timeout: 25_000 } as const;
 
 export type AiErrorKind = "no_key" | "rate_limited" | "failed";
 
-export function hasApiKey(): boolean {
+function hasApiKey(): boolean {
   return Boolean(process.env.MISTRAL_API_KEY);
 }
 
 /** Maps any provider error to a small vocabulary the UI knows how to explain. */
 export function classifyAiError(err: unknown): AiErrorKind {
   if (!hasApiKey()) return "no_key";
-  const status = (err as { statusCode?: number })?.statusCode ?? (err as { cause?: { statusCode?: number } })?.cause?.statusCode;
+  const status =
+    (err as { statusCode?: number })?.statusCode ?? (err as { cause?: { statusCode?: number } })?.cause?.statusCode;
   return status === 429 ? "rate_limited" : "failed";
 }
 
@@ -167,7 +168,11 @@ const SuggestionsSchema = z.object({
 });
 export type Suggestion = z.infer<typeof SuggestionsSchema>["suggestions"][number];
 
-export async function suggestWithAI(input: { lang: Lang; scholarship: Scholarship; draft: string }): Promise<Suggestion[]> {
+export async function suggestWithAI(input: {
+  lang: Lang;
+  scholarship: Scholarship;
+  draft: string;
+}): Promise<Suggestion[]> {
   const { output } = await generateText({
     model,
     ...CALL_OPTIONS,

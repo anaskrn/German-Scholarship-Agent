@@ -9,6 +9,7 @@ npm install
 cp .env.example .env.local   # then put your Mistral API key into .env.local
 npm run dev                  # http://localhost:3000
 npm test                     # matching engine + profile helpers
+npm run typecheck && npm run lint && npm run format:check
 npm run build
 ```
 
@@ -16,7 +17,7 @@ npm run build
 
 ## How it works
 
-1. **Describe** (`/`): free text (+ optional `.txt`/`.md` CV) → `POST /api/profile` extracts a structured profile. A keyword extractor (`src/lib/profile.ts`) fills gaps and is the fallback if the AI is down.
+1. **Describe** (`/`): free text and/or a PDF CV → `POST /api/profile` extracts a structured profile. Text PDFs are read by `POST /api/cv`; scanned PDFs are read in the browser with OCR (German, English, Chinese), so the file never leaves the device for that step. A keyword extractor (`src/lib/profile.ts`) fills gaps and is the fallback if the AI is down.
 2. **Matches** (`/analyzing` → `/matches`): `src/lib/matching.ts` scores all 13 scholarships deterministically (0-100). `POST /api/explain` writes the "why it fits" text for the top 3 in the active language; template texts are used if the AI fails.
 3. **Apply** (`/workspace/[id]`): document checklist, letter editor (Improve / Shorten / Translate, only applied when you click "Use this"; "Generate Draft PDF" opens the print dialog), and a coaching assistant (`/api/coach`, `/api/coach/suggestions`, `/api/coach/edit`) that never writes the whole letter.
 
@@ -28,4 +29,6 @@ Profile, matches and drafts are stored only in your browser (`localStorage`). Te
 
 ## Layout
 
-The UI is designed at 1440×900 and scaled uniformly to fit any window (`src/components/Stage.tsx`), so every screen is one full-screen view and the page never scrolls.
+- **Desktop:** designed at 1440×900 and scaled uniformly to fit any window (`src/components/Stage.tsx`), so every screen is one full-screen view.
+- **Mobile (< 900px):** a fluid full-height layout with a compact nav; the workspace becomes Documents / Letter / Assistant tabs.
+- The page itself never scrolls; long mobile screens scroll inside their content area.

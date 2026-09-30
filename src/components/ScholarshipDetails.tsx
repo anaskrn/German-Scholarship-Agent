@@ -73,7 +73,9 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
             <div className="flex items-center gap-5 pr-12 mobile:gap-4">
               <MatchRing value={match.score} label={t.matches.matchPercent(match.score)} />
               <div>
-                <h2 className="font-display text-[26px] font-semibold leading-[32px] tracking-[-0.015em] text-ink mobile:text-[20px] mobile:leading-[25px]">{s.name}</h2>
+                <h2 className="font-display text-[26px] font-semibold leading-[32px] tracking-[-0.015em] text-ink mobile:text-[20px] mobile:leading-[25px]">
+                  {s.name}
+                </h2>
                 <span className="soft-tag mt-2 inline-flex h-[26px] items-center rounded-[13px] px-[10px] text-[12px] font-medium">
                   {s.tag[lang]}
                 </span>
@@ -140,7 +142,11 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
                   {t.details.officialSite}
                   <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                 </a>
-                <button type="button" onClick={() => onStart(s.id)} className="btn-primary h-[42px] rounded-full px-5 mobile:h-[46px]">
+                <button
+                  type="button"
+                  onClick={() => onStart(s.id)}
+                  className="btn-primary h-[42px] rounded-full px-5 mobile:h-[46px]"
+                >
                   {t.matches.startApplication}
                 </button>
               </div>

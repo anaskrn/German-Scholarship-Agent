@@ -39,7 +39,9 @@ export function Assistant({ scholarship, draft }: Props) {
 
   /** Template tips built from the dataset: used whenever the AI cannot answer. */
   const fallbackTips = useCallback((): Tip[] => {
-    const values = scholarshipText(scholarship, lang).values.slice(0, 2).join(lang === "zh" ? "、" : ", ");
+    const values = scholarshipText(scholarship, lang)
+      .values.slice(0, 2)
+      .join(lang === "zh" ? "、" : ", ");
     return [
       { title: t.workspace.tips.openingTitle, text: t.workspace.tips.openingText, isQuestion: false },
       {
@@ -159,7 +161,10 @@ export function Assistant({ scholarship, draft }: Props) {
         </button>
       </header>
 
-      <div ref={scrollRef} className="thin-scroll -mr-2 mt-[14px] flex min-h-0 flex-1 flex-col gap-[14px] overflow-y-auto pr-2">
+      <div
+        ref={scrollRef}
+        className="thin-scroll -mr-2 mt-[14px] flex min-h-0 flex-1 flex-col gap-[14px] overflow-y-auto pr-2"
+      >
         {tips === null ? (
           <p className="px-1 text-[12.5px] text-muted">{t.workspace.loadingCards}</p>
         ) : (
@@ -171,7 +176,9 @@ export function Assistant({ scholarship, draft }: Props) {
               disabled={busy}
               className="rounded-[18px] bg-white/75 px-[17px] py-4 text-left transition-colors hover:bg-white disabled:opacity-70"
             >
-              <h3 className={`text-[13px] font-semibold leading-[18px] ${tip.isQuestion ? "text-violet-dark" : "text-ink"}`}>
+              <h3
+                className={`text-[13px] font-semibold leading-[18px] ${tip.isQuestion ? "text-violet-dark" : "text-ink"}`}
+              >
                 {tip.title}
               </h3>
               <p className="mt-[6px] text-[12.5px] leading-[20px] text-muted">{tip.text}</p>

@@ -50,7 +50,9 @@ export function DocChecklist({ t, documents, statuses, onChange }: Props) {
                 }`}
               >
                 <StatusIcon status={status} />
-                <span className={`flex-1 text-[14px] leading-[18px] text-ink ${isActive ? "font-medium" : ""}`}>{label}</span>
+                <span className={`flex-1 text-[14px] leading-[18px] text-ink ${isActive ? "font-medium" : ""}`}>
+                  {label}
+                </span>
                 <StatusPill status={status} label={statusLabel[status]} />
               </button>
             </li>
