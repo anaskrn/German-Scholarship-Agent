@@ -79,50 +79,86 @@ export function explanationFor(
 export interface AnalysisResult {
   profile: Profile;
   matches: MatchResult[];
-  explanations: { lang: Lang; byId: Record<string, string> };
+  /** null = not available yet (the matches page then fetches them itself) */
+  explanations: { lang: Lang; byId: Record<string, string> } | null;
   aiDegraded: boolean;
 }
 
-const inflight = new Map<string, Promise<AnalysisResult>>();
+/** Progress events of one analysis run (used by the loading screens). */
+type AnalysisEvent =
+  | { type: "step"; step: number } // 0 reading, 1 checking eligibility, 2 scoring
+  | { type: "profile"; profile: Profile; degraded: boolean }
+  | { type: "matches"; matches: MatchResult[] };
+
+export interface RunOptions {
+  /** Minimum total duration in ms (classic screen: 1800). 0 = no artificial pacing (the orbit screen paces itself). */
+  minMs?: number;
+  onEvent?: (event: AnalysisEvent) => void;
+}
+
+interface Job {
+  promise: Promise<AnalysisResult>;
+  events: AnalysisEvent[];
+  listeners: Set<(event: AnalysisEvent) => void>;
+}
+
+const inflight = new Map<string, Job>();
 
 /**
- * Runs the whole pipeline. `onStep(n)` is called when step n becomes active
- * (0 reading, 1 checking eligibility, 2 scoring). Takes at least ~1.8 s so the screen never flashes.
+ * Runs the whole pipeline: text -> profile -> matches -> explanations.
+ * Calling it again with the same input (e.g. React strict mode) joins the running job; late subscribers get all
+ * earlier events replayed, so the UI never misses a step.
  */
-export function runAnalysis(text: string, lang: Lang, onStep: (step: number) => void): Promise<AnalysisResult> {
-  const key = `${lang}:${text}`;
-  const existing = inflight.get(key);
-  if (existing) return existing;
+export function runAnalysis(text: string, lang: Lang, options: RunOptions = {}): Promise<AnalysisResult> {
+  const { minMs = 1800, onEvent } = options;
+  const key = `${lang}:${minMs}:${text}`;
 
-  const job = (async () => {
-    const started = Date.now();
-
-    onStep(0);
-    const [{ profile, degraded: profileDegraded }] = await Promise.all([fetchProfile(text), delay(700)]);
-
-    onStep(1);
-    const matches = matchScholarships(profile);
-    await delay(600);
-
-    onStep(2);
-    const [{ byId, degraded: explainDegraded }] = await Promise.all([
-      fetchExplanations(profile, matches, lang),
-      delay(500),
-    ]);
-
-    const remaining = 1800 - (Date.now() - started);
-    if (remaining > 0) await delay(remaining);
-
-    return {
-      profile,
-      matches,
-      explanations: { lang, byId },
-      aiDegraded: profileDegraded || explainDegraded,
+  let job = inflight.get(key);
+  if (!job) {
+    const events: AnalysisEvent[] = [];
+    const listeners = new Set<(event: AnalysisEvent) => void>();
+    const emit = (event: AnalysisEvent) => {
+      events.push(event);
+      listeners.forEach((l) => l(event));
     };
-  })().finally(() => setTimeout(() => inflight.delete(key), 3000));
+    const pace = (ms: number) => (minMs > 0 ? delay(ms) : Promise.resolve());
 
-  inflight.set(key, job);
-  return job;
+    const promise = (async (): Promise<AnalysisResult> => {
+      const started = Date.now();
+
+      emit({ type: "step", step: 0 });
+      const profileJob = fetchProfile(text).then((r) => {
+        emit({ type: "profile", profile: r.profile, degraded: r.degraded });
+        return r;
+      });
+      const [{ profile, degraded: profileDegraded }] = await Promise.all([profileJob, pace(700)]);
+
+      emit({ type: "step", step: 1 });
+      const matches = matchScholarships(profile);
+      emit({ type: "matches", matches });
+      await pace(600);
+
+      emit({ type: "step", step: 2 });
+      const [{ byId, degraded: explainDegraded }] = await Promise.all([
+        fetchExplanations(profile, matches, lang),
+        pace(500),
+      ]);
+
+      const remaining = minMs - (Date.now() - started);
+      if (remaining > 0) await delay(remaining);
+
+      return { profile, matches, explanations: { lang, byId }, aiDegraded: profileDegraded || explainDegraded };
+    })().finally(() => setTimeout(() => inflight.delete(key), 3000));
+
+    job = { promise, events, listeners };
+    inflight.set(key, job);
+  }
+
+  if (onEvent) {
+    job.events.forEach(onEvent); // replay what already happened
+    job.listeners.add(onEvent);
+  }
+  return job.promise;
 }
 
 export function scholarshipCount(): number {

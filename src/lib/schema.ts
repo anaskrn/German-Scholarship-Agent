@@ -63,6 +63,9 @@ const TextBlockSchema = z.object({
 export const ScholarshipSchema = z.object({
   id: z.string(),
   name: z.string(),
+  /** short label for compact UI (loading screen) and a 2-letter abbreviation for the orbit nodes */
+  shortName: z.string(),
+  abbr: z.string(),
   displayName: LocalizedStringSchema,
   type: z.string(),
   orientation: LocalizedStringSchema,

@@ -246,3 +246,18 @@ input:focus-visible {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Loading screen: slow orbiting dots on the rings */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.orbit-spin {
+  animation: orbit-spin var(--orbit-duration, 24s) linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .orbit-spin {
+    animation: none !important;
+  }
+}

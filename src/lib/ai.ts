@@ -45,12 +45,13 @@ export async function extractProfileWithAI(text: string): Promise<Profile> {
     output: Output.object({ schema: ProfileSchema }),
     system: `You extract a structured student profile from free text (English, German or Chinese).
 Rules:
-- Use null (or an empty array) for anything the text does not clearly state. Never guess.
+- Extract ONLY what is explicitly written in the text. Never infer, assume or add typical facts. Use null (or an empty array) for anything not clearly stated.
+- If the text is very short (a few words), most fields MUST be null. Do not fill in a "likely" profile.
+- fieldOfStudy, goals, countryOfStudy, languageSkills: copy the wording from the text (short, in the language of the text).
 - religion, politicalAffinity and unionMember: fill ONLY if the text explicitly says so.
 - topics: choose only from [${TOPICS.join(", ")}].
 - politicalAffinity: one of spd, fdp, csu, greens, cdu, linke.
 - phase: bachelor, master, phd or pre-university. gradesBand: excellent, good or average.
-- fieldOfStudy, goals, countryOfStudy, languageSkills: short English strings.
 - The text may contain a CV. Use the CURRENT or most recent degree for phase and fieldOfStudy (e.g. a finished Bachelor plus an ongoing Master means "master").
 - From a CV, derive topics from studies, projects, volunteering and interests. Do NOT infer religion, political affinity or union membership from a CV unless it is stated outright.
 - gradesBand: "excellent" only for clearly top results (e.g. German grade 1.0-1.5, GPA 3.8+/4.0, top of class, honours); otherwise "good" or null.
@@ -103,10 +104,17 @@ Rules:
     prompt: JSON.stringify({ profile, scholarships: facts }),
   });
 
+  // Guard against invented specifics: any number in the text must come from the profile or the dataset
+  // (scores are excluded on purpose). Otherwise the explanation is dropped and the UI uses its template.
+  const allowedNumbers = new Set(
+    JSON.stringify({ profile, scholarships: facts.map((f) => ({ ...f, fitScore: undefined })) }).match(/\d+/g) ?? [],
+  );
+  const onlyKnownNumbers = (text: string) => (text.match(/\d+/g) ?? []).every((n) => allowedNumbers.has(n));
+
   const out: Record<string, string> = {};
   for (const item of output.items) {
     const text = item.text.trim();
-    if (text && facts.some((f) => f.id === item.id)) out[item.id] = text;
+    if (text && onlyKnownNumbers(text) && facts.some((f) => f.id === item.id)) out[item.id] = text;
   }
 
   // Small models sometimes skip items: ask once more for exactly the missing ones.

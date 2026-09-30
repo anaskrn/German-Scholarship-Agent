@@ -23,6 +23,18 @@ npm run build
 
 All LLM calls live in `src/lib/ai.ts`. Facts (deadlines, criteria) only come from `data/scholarships.json`; the UI never shows past dates as current and always points to the official site.
 
+## Loading screen
+
+While the analysis runs, `/analyzing` shows a live picture of it (`src/components/analyzing/AnalyzingOrbit.tsx`): the profile rows and chips are the facts extracted from your text/CV, the foundations and bars are the real scores, recomputed as each fact is read. The original spinner screen is kept as a backup (`AnalyzingClassic.tsx`):
+
+- `NEXT_PUBLIC_ANALYZING_SCREEN=classic` in `.env.local` (then rebuild/restart) makes the classic screen the default
+- `/analyzing?loader=classic` or `?loader=orbit` overrides it for one visit
+- if the orbit screen ever crashes, the classic screen takes over automatically
+
+## No invented facts
+
+Everything the AI extracts is checked against the user's own text before it is used (`verifyProfile` in `src/lib/profile.ts`): religion, party, union and first-generation status are taken only from explicit statements ("I am Catholic", "member of the SPD"), never from a mere mention; grades, study level, field, goal, country and languages must be traceable to the text; AI explanations containing numbers that are not in the data are discarded. Anything unsupported shows as "not mentioned".
+
 ## Privacy
 
 Profile, matches and drafts are stored only in your browser (`localStorage`). Text you write is sent to Mistral (EU) for analysis and is not logged or stored by this app.

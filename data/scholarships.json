@@ -88,378 +88,9 @@
         "selectionProcess": "自主申请需参加选拔测试，或由学校/高校推荐；随后参加含面谈的选拔研讨会。",
         "essayFocus": "展现出色的学术能力、超越本专业的广泛求知欲，以及强烈的社会责任感。"
       }
-    }
-  },
-  {
-    "id": "cusanuswerk",
-    "name": "Cusanuswerk",
-    "displayName": {
-      "en": "Cusanuswerk",
-      "de": "Cusanuswerk",
-      "zh": "库萨努斯基金会"
     },
-    "type": "begabtenfoerderungswerk",
-    "orientation": {
-      "en": "Catholic",
-      "de": "Katholisch"
-    },
-    "values": [
-      "catholic faith",
-      "academic excellence",
-      "social responsibility",
-      "dialogue"
-    ],
-    "phases": [
-      "bachelor",
-      "master",
-      "phd"
-    ],
-    "hardFilters": [
-      "catholic"
-    ],
-    "deadlines": [
-      {
-        "label": "General application",
-        "date": null,
-        "note": "Usually summer for winter term, check official site"
-      }
-    ],
-    "selectionProcess": "Written application, expert reviews, selection interviews assessing both academic potential and reflection on faith.",
-    "essayFocus": "Your reflection on the Catholic faith, how it shapes your worldview and societal engagement, combined with your academic ambitions.",
-    "documents": [
-      "motivation letter",
-      "CV",
-      "transcript",
-      "reference letter",
-      "baptism certificate"
-    ],
-    "funding": {
-      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
-    },
-    "url": "https://www.cusanuswerk.de/",
-    "lastVerified": "2024-03-01",
-    "affinity": "catholic",
-    "tag": {
-      "en": "Catholic",
-      "de": "Katholisch",
-      "zh": "天主教"
-    },
-    "topics": [
-      "faith",
-      "social",
-      "culture",
-      "research",
-      "education"
-    ],
-    "text": {
-      "en": {
-        "values": [
-          "catholic faith",
-          "academic excellence",
-          "social responsibility",
-          "dialogue"
-        ],
-        "selectionProcess": "Written application, expert reviews, selection interviews assessing both academic potential and reflection on faith.",
-        "essayFocus": "Your reflection on the Catholic faith, how it shapes your worldview and societal engagement, combined with your academic ambitions."
-      },
-      "de": {
-        "values": [
-          "katholischer Glaube",
-          "akademische Exzellenz",
-          "soziale Verantwortung",
-          "Dialog"
-        ],
-        "selectionProcess": "Schriftliche Bewerbung, Fachgutachten und Auswahlgespräche, die sowohl akademisches Potenzial als auch die Reflexion des Glaubens berücksichtigen.",
-        "essayFocus": "Deine Reflexion über den katholischen Glauben, wie er dein Weltbild und dein gesellschaftliches Engagement prägt – verbunden mit deinen akademischen Zielen."
-      },
-      "zh": {
-        "values": [
-          "天主教信仰",
-          "学术卓越",
-          "社会责任",
-          "对话"
-        ],
-        "selectionProcess": "书面申请、专家评审，以及同时考察学术潜力与信仰反思的选拔面谈。",
-        "essayFocus": "你对天主教信仰的思考、它如何塑造你的世界观与社会参与，并结合你的学术抱负。"
-      }
-    }
-  },
-  {
-    "id": "villigst",
-    "name": "Evangelisches Studienwerk Villigst",
-    "displayName": {
-      "en": "Protestant Academic Foundation Villigst",
-      "de": "Evangelisches Studienwerk Villigst",
-      "zh": "维利希特新教奖学金"
-    },
-    "type": "begabtenfoerderungswerk",
-    "orientation": {
-      "en": "Protestant",
-      "de": "Evangelisch"
-    },
-    "values": [
-      "protestant faith",
-      "social justice",
-      "ecological responsibility",
-      "critical thinking"
-    ],
-    "phases": [
-      "bachelor",
-      "master",
-      "phd"
-    ],
-    "hardFilters": [
-      "protestant"
-    ],
-    "deadlines": [
-      {
-        "label": "Winter Term",
-        "date": "2024-03-01",
-        "note": "Check official site"
-      }
-    ],
-    "selectionProcess": "Online application, pre-selection, and a multi-day selection seminar.",
-    "essayFocus": "Your social and ecological engagement rooted in Protestant values, and a critical approach to societal challenges.",
-    "documents": [
-      "motivation letter",
-      "CV",
-      "transcript",
-      "reference letter"
-    ],
-    "funding": {
-      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
-    },
-    "url": "https://www.evstudienwerk.de/",
-    "lastVerified": "2024-03-01",
-    "affinity": "protestant",
-    "tag": {
-      "en": "Protestant",
-      "de": "Evangelisch",
-      "zh": "新教"
-    },
-    "topics": [
-      "faith",
-      "social",
-      "ecology",
-      "equality",
-      "democracy"
-    ],
-    "text": {
-      "en": {
-        "values": [
-          "protestant faith",
-          "social justice",
-          "ecological responsibility",
-          "critical thinking"
-        ],
-        "selectionProcess": "Online application, pre-selection, and a multi-day selection seminar.",
-        "essayFocus": "Your social and ecological engagement rooted in Protestant values, and a critical approach to societal challenges."
-      },
-      "de": {
-        "values": [
-          "evangelischer Glaube",
-          "soziale Gerechtigkeit",
-          "ökologische Verantwortung",
-          "kritisches Denken"
-        ],
-        "selectionProcess": "Online-Bewerbung, Vorauswahl und ein mehrtägiges Auswahlseminar.",
-        "essayFocus": "Dein soziales und ökologisches Engagement aus evangelischer Überzeugung sowie ein kritischer Zugang zu gesellschaftlichen Herausforderungen."
-      },
-      "zh": {
-        "values": [
-          "新教信仰",
-          "社会公正",
-          "生态责任",
-          "批判性思维"
-        ],
-        "selectionProcess": "在线申请、初选，以及为期数日的选拔研讨会。",
-        "essayFocus": "你基于新教价值观的社会与生态参与，以及对社会挑战的批判性思考。"
-      }
-    }
-  },
-  {
-    "id": "eles",
-    "name": "Ernst Ludwig Ehrlich Studienwerk",
-    "displayName": {
-      "en": "Ernst Ludwig Ehrlich Scholarship Fund",
-      "de": "Ernst Ludwig Ehrlich Studienwerk",
-      "zh": "恩斯特·路德维希·埃尔利希奖学金"
-    },
-    "type": "begabtenfoerderungswerk",
-    "orientation": {
-      "en": "Jewish",
-      "de": "Jüdisch"
-    },
-    "values": [
-      "jewish identity",
-      "academic excellence",
-      "societal engagement",
-      "pluralism"
-    ],
-    "phases": [
-      "bachelor",
-      "master",
-      "phd"
-    ],
-    "hardFilters": [],
-    "deadlines": [
-      {
-        "label": "General Application",
-        "date": null,
-        "note": "Check official site"
-      }
-    ],
-    "selectionProcess": "Written application followed by two selection interviews.",
-    "essayFocus": "Active participation in the Jewish community and society at large, alongside strong academic potential.",
-    "documents": [
-      "motivation letter",
-      "CV",
-      "transcript",
-      "reference letter"
-    ],
-    "funding": {
-      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
-    },
-    "url": "https://www.eles-studienwerk.de/",
-    "lastVerified": "2024-03-01",
-    "affinity": "jewish",
-    "tag": {
-      "en": "Jewish",
-      "de": "Jüdisch",
-      "zh": "犹太教"
-    },
-    "topics": [
-      "faith",
-      "culture",
-      "social",
-      "democracy",
-      "international"
-    ],
-    "text": {
-      "en": {
-        "values": [
-          "jewish identity",
-          "academic excellence",
-          "societal engagement",
-          "pluralism"
-        ],
-        "selectionProcess": "Written application followed by two selection interviews.",
-        "essayFocus": "Active participation in the Jewish community and society at large, alongside strong academic potential."
-      },
-      "de": {
-        "values": [
-          "jüdische Identität",
-          "akademische Exzellenz",
-          "gesellschaftliches Engagement",
-          "Pluralismus"
-        ],
-        "selectionProcess": "Schriftliche Bewerbung, gefolgt von zwei Auswahlgesprächen.",
-        "essayFocus": "Aktive Teilnahme am jüdischen Gemeindeleben und an der Gesellschaft insgesamt, zusammen mit starkem akademischem Potenzial."
-      },
-      "zh": {
-        "values": [
-          "犹太身份认同",
-          "学术卓越",
-          "社会参与",
-          "多元主义"
-        ],
-        "selectionProcess": "书面申请，随后进行两轮选拔面谈。",
-        "essayFocus": "积极参与犹太社群及整个社会，并具备突出的学术潜力。"
-      }
-    }
-  },
-  {
-    "id": "avicenna",
-    "name": "Avicenna-Studienwerk",
-    "displayName": {
-      "en": "Avicenna Scholarship Foundation",
-      "de": "Avicenna-Studienwerk",
-      "zh": "阿维森纳奖学金"
-    },
-    "type": "begabtenfoerderungswerk",
-    "orientation": {
-      "en": "Muslim",
-      "de": "Muslimisch"
-    },
-    "values": [
-      "muslim identity",
-      "social engagement",
-      "academic excellence",
-      "intercultural dialogue"
-    ],
-    "phases": [
-      "bachelor",
-      "master",
-      "phd"
-    ],
-    "hardFilters": [
-      "muslim"
-    ],
-    "deadlines": [
-      {
-        "label": "Winter Term",
-        "date": null,
-        "note": "Check official site"
-      }
-    ],
-    "selectionProcess": "Written application, expert reviews, and selection interviews.",
-    "essayFocus": "Your connection to Islam, voluntary engagement in the Muslim community or society, and how you aim to build bridges in society.",
-    "documents": [
-      "motivation letter",
-      "CV",
-      "transcript",
-      "reference letter"
-    ],
-    "funding": {
-      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
-    },
-    "url": "https://www.avicenna-studienwerk.de/",
-    "lastVerified": "2024-03-01",
-    "affinity": "muslim",
-    "tag": {
-      "en": "Muslim",
-      "de": "Muslimisch",
-      "zh": "伊斯兰教"
-    },
-    "topics": [
-      "faith",
-      "social",
-      "culture",
-      "international",
-      "education"
-    ],
-    "text": {
-      "en": {
-        "values": [
-          "muslim identity",
-          "social engagement",
-          "academic excellence",
-          "intercultural dialogue"
-        ],
-        "selectionProcess": "Written application, expert reviews, and selection interviews.",
-        "essayFocus": "Your connection to Islam, voluntary engagement in the Muslim community or society, and how you aim to build bridges in society."
-      },
-      "de": {
-        "values": [
-          "muslimische Identität",
-          "soziales Engagement",
-          "akademische Exzellenz",
-          "interkultureller Dialog"
-        ],
-        "selectionProcess": "Schriftliche Bewerbung, Fachgutachten und Auswahlgespräche.",
-        "essayFocus": "Deine Verbindung zum Islam, dein ehrenamtliches Engagement in der muslimischen Gemeinschaft oder Gesellschaft und wie du Brücken in der Gesellschaft bauen möchtest."
-      },
-      "zh": {
-        "values": [
-          "穆斯林身份认同",
-          "社会参与",
-          "学术卓越",
-          "跨文化对话"
-        ],
-        "selectionProcess": "书面申请、专家评审和选拔面谈。",
-        "essayFocus": "你与伊斯兰教的联系、在穆斯林社群或社会中的志愿参与，以及你打算如何在社会中搭建桥梁。"
-      }
-    }
+    "abbr": "St",
+    "shortName": "Studienstiftung"
   },
   {
     "id": "fes",
@@ -551,117 +182,28 @@
         "selectionProcess": "在线申请，随后两次面谈（一次与联络教授，一次与选拔委员会成员）。",
         "essayFocus": "你对社会民主价值观的认同、积极的社会政治参与，以及推动建设更平等社会的动力。"
       }
-    }
+    },
+    "abbr": "FE",
+    "shortName": "Friedrich-Ebert"
   },
   {
-    "id": "fnf",
-    "name": "Friedrich-Naumann-Stiftung für die Freiheit",
+    "id": "kas",
+    "name": "Konrad-Adenauer-Stiftung",
     "displayName": {
-      "en": "Friedrich Naumann Foundation",
-      "de": "Friedrich-Naumann-Stiftung",
-      "zh": "弗里德里希·诺曼基金会"
+      "en": "Konrad Adenauer Foundation",
+      "de": "Konrad-Adenauer-Stiftung",
+      "zh": "康拉德·阿登纳基金会"
     },
     "type": "begabtenfoerderungswerk",
     "orientation": {
-      "en": "close to FDP",
-      "de": "FDP-nah"
+      "en": "close to CDU",
+      "de": "CDU-nah"
     },
     "values": [
-      "liberalism",
+      "christian-democratic values",
       "freedom",
-      "individual responsibility",
-      "market economy"
-    ],
-    "phases": [
-      "bachelor",
-      "master",
-      "phd"
-    ],
-    "hardFilters": [],
-    "deadlines": [
-      {
-        "label": "Spring Application",
-        "date": "2024-04-30",
-        "note": "Check official site"
-      }
-    ],
-    "selectionProcess": "Written application, pre-selection, and a selection seminar.",
-    "essayFocus": "Your liberal convictions, understanding of freedom and individual responsibility, and active engagement for a free society.",
-    "documents": [
-      "motivation letter",
-      "CV",
-      "transcript",
-      "reference letter"
-    ],
-    "funding": {
-      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
-    },
-    "url": "https://www.freiheit.org/stipendien",
-    "lastVerified": "2024-03-01",
-    "affinity": "fdp",
-    "tag": {
-      "en": "FDP-nah",
-      "de": "FDP-nah",
-      "zh": "亲近自民党"
-    },
-    "topics": [
-      "politics",
-      "business",
-      "law",
-      "democracy",
-      "technology"
-    ],
-    "text": {
-      "en": {
-        "values": [
-          "liberalism",
-          "freedom",
-          "individual responsibility",
-          "market economy"
-        ],
-        "selectionProcess": "Written application, pre-selection, and a selection seminar.",
-        "essayFocus": "Your liberal convictions, understanding of freedom and individual responsibility, and active engagement for a free society."
-      },
-      "de": {
-        "values": [
-          "Liberalismus",
-          "Freiheit",
-          "Eigenverantwortung",
-          "Marktwirtschaft"
-        ],
-        "selectionProcess": "Schriftliche Bewerbung, Vorauswahl und ein Auswahlseminar.",
-        "essayFocus": "Deine liberale Überzeugung, dein Verständnis von Freiheit und Eigenverantwortung und dein aktives Engagement für eine freie Gesellschaft."
-      },
-      "zh": {
-        "values": [
-          "自由主义",
-          "自由",
-          "个人责任",
-          "市场经济"
-        ],
-        "selectionProcess": "书面申请、初选和选拔研讨会。",
-        "essayFocus": "你的自由主义信念、对自由与个人责任的理解，以及为自由社会所做的积极努力。"
-      }
-    }
-  },
-  {
-    "id": "hss",
-    "name": "Hanns-Seidel-Stiftung",
-    "displayName": {
-      "en": "Hanns Seidel Foundation",
-      "de": "Hanns-Seidel-Stiftung",
-      "zh": "汉斯·赛德尔基金会"
-    },
-    "type": "begabtenfoerderungswerk",
-    "orientation": {
-      "en": "close to CSU",
-      "de": "CSU-nah"
-    },
-    "values": [
-      "christian-social values",
-      "democracy",
-      "rule of law",
-      "social market economy"
+      "justice",
+      "solidarity"
     ],
     "phases": [
       "bachelor",
@@ -676,8 +218,8 @@
         "note": "Check official site"
       }
     ],
-    "selectionProcess": "Written application and selection seminar.",
-    "essayFocus": "Your alignment with Christian-social values, civic engagement, and commitment to the democratic rule of law.",
+    "selectionProcess": "Written application, pre-selection, and a selection seminar with interviews and group discussions.",
+    "essayFocus": "Your commitment to Christian-democratic values, voluntary work in society or politics, and a clear vision for contributing to a free and just society.",
     "documents": [
       "motivation letter",
       "CV",
@@ -687,53 +229,55 @@
     "funding": {
       "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
     },
-    "url": "https://www.hss.de/stipendium/",
+    "url": "https://www.kas.de/de/stipendien",
     "lastVerified": "2024-03-01",
-    "affinity": "csu",
+    "affinity": "cdu",
     "tag": {
-      "en": "CSU-nah",
-      "de": "CSU-nah",
-      "zh": "亲近基社盟"
+      "en": "CDU-nah",
+      "de": "CDU-nah",
+      "zh": "亲近基民盟"
     },
     "topics": [
       "politics",
       "democracy",
       "law",
       "business",
-      "culture"
+      "international"
     ],
     "text": {
       "en": {
         "values": [
-          "christian-social values",
-          "democracy",
-          "rule of law",
-          "social market economy"
+          "christian-democratic values",
+          "freedom",
+          "justice",
+          "solidarity"
         ],
-        "selectionProcess": "Written application and selection seminar.",
-        "essayFocus": "Your alignment with Christian-social values, civic engagement, and commitment to the democratic rule of law."
+        "selectionProcess": "Written application, pre-selection, and a selection seminar with interviews and group discussions.",
+        "essayFocus": "Your commitment to Christian-democratic values, voluntary work in society or politics, and a clear vision for contributing to a free and just society."
       },
       "de": {
         "values": [
-          "christlich-soziale Werte",
-          "Demokratie",
-          "Rechtsstaatlichkeit",
-          "soziale Marktwirtschaft"
+          "christlich-demokratische Werte",
+          "Freiheit",
+          "Gerechtigkeit",
+          "Solidarität"
         ],
-        "selectionProcess": "Schriftliche Bewerbung und Auswahlseminar.",
-        "essayFocus": "Deine Verbundenheit mit christlich-sozialen Werten, dein bürgerschaftliches Engagement und dein Einsatz für den demokratischen Rechtsstaat."
+        "selectionProcess": "Schriftliche Bewerbung, Vorauswahl und ein Auswahlseminar mit Gesprächen und Gruppendiskussionen.",
+        "essayFocus": "Dein Bekenntnis zu christlich-demokratischen Werten, ehrenamtliches Engagement in Gesellschaft oder Politik und eine klare Vorstellung, wie du zu einer freien und gerechten Gesellschaft beitragen willst."
       },
       "zh": {
         "values": [
-          "基督教社会价值观",
-          "民主",
-          "法治",
-          "社会市场经济"
+          "基督教民主价值观",
+          "自由",
+          "公正",
+          "团结"
         ],
-        "selectionProcess": "书面申请和选拔研讨会。",
-        "essayFocus": "你对基督教社会价值观的认同、公民参与，以及对民主法治的承诺。"
+        "selectionProcess": "书面申请、初选，以及包含面谈和小组讨论的选拔研讨会。",
+        "essayFocus": "你对基督教民主价值观的认同、在社会或政治领域的志愿工作，以及为自由公正的社会做贡献的清晰愿景。"
       }
-    }
+    },
+    "abbr": "KA",
+    "shortName": "Konrad-Adenauer"
   },
   {
     "id": "boell",
@@ -828,26 +372,121 @@
         "selectionProcess": "在线申请、推荐信，以及选拔面谈或工作坊。",
         "essayFocus": "符合基金会价值观的社会参与（如环保、社会公正、人权），以及强烈的学术动机。"
       }
-    }
+    },
+    "abbr": "Bö",
+    "shortName": "Heinrich-Böll"
   },
   {
-    "id": "kas",
-    "name": "Konrad-Adenauer-Stiftung",
+    "id": "fnf",
+    "name": "Friedrich-Naumann-Stiftung für die Freiheit",
     "displayName": {
-      "en": "Konrad Adenauer Foundation",
-      "de": "Konrad-Adenauer-Stiftung",
-      "zh": "康拉德·阿登纳基金会"
+      "en": "Friedrich Naumann Foundation",
+      "de": "Friedrich-Naumann-Stiftung",
+      "zh": "弗里德里希·诺曼基金会"
     },
     "type": "begabtenfoerderungswerk",
     "orientation": {
-      "en": "close to CDU",
-      "de": "CDU-nah"
+      "en": "close to FDP",
+      "de": "FDP-nah"
     },
     "values": [
-      "christian-democratic values",
+      "liberalism",
       "freedom",
-      "justice",
-      "solidarity"
+      "individual responsibility",
+      "market economy"
+    ],
+    "phases": [
+      "bachelor",
+      "master",
+      "phd"
+    ],
+    "hardFilters": [],
+    "deadlines": [
+      {
+        "label": "Spring Application",
+        "date": "2024-04-30",
+        "note": "Check official site"
+      }
+    ],
+    "selectionProcess": "Written application, pre-selection, and a selection seminar.",
+    "essayFocus": "Your liberal convictions, understanding of freedom and individual responsibility, and active engagement for a free society.",
+    "documents": [
+      "motivation letter",
+      "CV",
+      "transcript",
+      "reference letter"
+    ],
+    "funding": {
+      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
+    },
+    "url": "https://www.freiheit.org/stipendien",
+    "lastVerified": "2024-03-01",
+    "affinity": "fdp",
+    "tag": {
+      "en": "FDP-nah",
+      "de": "FDP-nah",
+      "zh": "亲近自民党"
+    },
+    "topics": [
+      "politics",
+      "business",
+      "law",
+      "democracy",
+      "technology"
+    ],
+    "text": {
+      "en": {
+        "values": [
+          "liberalism",
+          "freedom",
+          "individual responsibility",
+          "market economy"
+        ],
+        "selectionProcess": "Written application, pre-selection, and a selection seminar.",
+        "essayFocus": "Your liberal convictions, understanding of freedom and individual responsibility, and active engagement for a free society."
+      },
+      "de": {
+        "values": [
+          "Liberalismus",
+          "Freiheit",
+          "Eigenverantwortung",
+          "Marktwirtschaft"
+        ],
+        "selectionProcess": "Schriftliche Bewerbung, Vorauswahl und ein Auswahlseminar.",
+        "essayFocus": "Deine liberale Überzeugung, dein Verständnis von Freiheit und Eigenverantwortung und dein aktives Engagement für eine freie Gesellschaft."
+      },
+      "zh": {
+        "values": [
+          "自由主义",
+          "自由",
+          "个人责任",
+          "市场经济"
+        ],
+        "selectionProcess": "书面申请、初选和选拔研讨会。",
+        "essayFocus": "你的自由主义信念、对自由与个人责任的理解，以及为自由社会所做的积极努力。"
+      }
+    },
+    "abbr": "FN",
+    "shortName": "Friedrich-Naumann"
+  },
+  {
+    "id": "hss",
+    "name": "Hanns-Seidel-Stiftung",
+    "displayName": {
+      "en": "Hanns Seidel Foundation",
+      "de": "Hanns-Seidel-Stiftung",
+      "zh": "汉斯·赛德尔基金会"
+    },
+    "type": "begabtenfoerderungswerk",
+    "orientation": {
+      "en": "close to CSU",
+      "de": "CSU-nah"
+    },
+    "values": [
+      "christian-social values",
+      "democracy",
+      "rule of law",
+      "social market economy"
     ],
     "phases": [
       "bachelor",
@@ -862,8 +501,8 @@
         "note": "Check official site"
       }
     ],
-    "selectionProcess": "Written application, pre-selection, and a selection seminar with interviews and group discussions.",
-    "essayFocus": "Your commitment to Christian-democratic values, voluntary work in society or politics, and a clear vision for contributing to a free and just society.",
+    "selectionProcess": "Written application and selection seminar.",
+    "essayFocus": "Your alignment with Christian-social values, civic engagement, and commitment to the democratic rule of law.",
     "documents": [
       "motivation letter",
       "CV",
@@ -873,53 +512,55 @@
     "funding": {
       "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
     },
-    "url": "https://www.kas.de/de/stipendien",
+    "url": "https://www.hss.de/stipendium/",
     "lastVerified": "2024-03-01",
-    "affinity": "cdu",
+    "affinity": "csu",
     "tag": {
-      "en": "CDU-nah",
-      "de": "CDU-nah",
-      "zh": "亲近基民盟"
+      "en": "CSU-nah",
+      "de": "CSU-nah",
+      "zh": "亲近基社盟"
     },
     "topics": [
       "politics",
       "democracy",
       "law",
       "business",
-      "international"
+      "culture"
     ],
     "text": {
       "en": {
         "values": [
-          "christian-democratic values",
-          "freedom",
-          "justice",
-          "solidarity"
+          "christian-social values",
+          "democracy",
+          "rule of law",
+          "social market economy"
         ],
-        "selectionProcess": "Written application, pre-selection, and a selection seminar with interviews and group discussions.",
-        "essayFocus": "Your commitment to Christian-democratic values, voluntary work in society or politics, and a clear vision for contributing to a free and just society."
+        "selectionProcess": "Written application and selection seminar.",
+        "essayFocus": "Your alignment with Christian-social values, civic engagement, and commitment to the democratic rule of law."
       },
       "de": {
         "values": [
-          "christlich-demokratische Werte",
-          "Freiheit",
-          "Gerechtigkeit",
-          "Solidarität"
+          "christlich-soziale Werte",
+          "Demokratie",
+          "Rechtsstaatlichkeit",
+          "soziale Marktwirtschaft"
         ],
-        "selectionProcess": "Schriftliche Bewerbung, Vorauswahl und ein Auswahlseminar mit Gesprächen und Gruppendiskussionen.",
-        "essayFocus": "Dein Bekenntnis zu christlich-demokratischen Werten, ehrenamtliches Engagement in Gesellschaft oder Politik und eine klare Vorstellung, wie du zu einer freien und gerechten Gesellschaft beitragen willst."
+        "selectionProcess": "Schriftliche Bewerbung und Auswahlseminar.",
+        "essayFocus": "Deine Verbundenheit mit christlich-sozialen Werten, dein bürgerschaftliches Engagement und dein Einsatz für den demokratischen Rechtsstaat."
       },
       "zh": {
         "values": [
-          "基督教民主价值观",
-          "自由",
-          "公正",
-          "团结"
+          "基督教社会价值观",
+          "民主",
+          "法治",
+          "社会市场经济"
         ],
-        "selectionProcess": "书面申请、初选，以及包含面谈和小组讨论的选拔研讨会。",
-        "essayFocus": "你对基督教民主价值观的认同、在社会或政治领域的志愿工作，以及为自由公正的社会做贡献的清晰愿景。"
+        "selectionProcess": "书面申请和选拔研讨会。",
+        "essayFocus": "你对基督教社会价值观的认同、公民参与，以及对民主法治的承诺。"
       }
-    }
+    },
+    "abbr": "HS",
+    "shortName": "Hanns-Seidel"
   },
   {
     "id": "rls",
@@ -1010,7 +651,388 @@
         "selectionProcess": "在线申请，随后进行选拔面谈。",
         "essayFocus": "你积极参与社会运动、工会或左翼政治，致力于建设公正而团结的社会。"
       }
-    }
+    },
+    "abbr": "RL",
+    "shortName": "Rosa-Luxemburg"
+  },
+  {
+    "id": "cusanuswerk",
+    "name": "Cusanuswerk",
+    "displayName": {
+      "en": "Cusanuswerk",
+      "de": "Cusanuswerk",
+      "zh": "库萨努斯基金会"
+    },
+    "type": "begabtenfoerderungswerk",
+    "orientation": {
+      "en": "Catholic",
+      "de": "Katholisch"
+    },
+    "values": [
+      "catholic faith",
+      "academic excellence",
+      "social responsibility",
+      "dialogue"
+    ],
+    "phases": [
+      "bachelor",
+      "master",
+      "phd"
+    ],
+    "hardFilters": [
+      "catholic"
+    ],
+    "deadlines": [
+      {
+        "label": "General application",
+        "date": null,
+        "note": "Usually summer for winter term, check official site"
+      }
+    ],
+    "selectionProcess": "Written application, expert reviews, selection interviews assessing both academic potential and reflection on faith.",
+    "essayFocus": "Your reflection on the Catholic faith, how it shapes your worldview and societal engagement, combined with your academic ambitions.",
+    "documents": [
+      "motivation letter",
+      "CV",
+      "transcript",
+      "reference letter",
+      "baptism certificate"
+    ],
+    "funding": {
+      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
+    },
+    "url": "https://www.cusanuswerk.de/",
+    "lastVerified": "2024-03-01",
+    "affinity": "catholic",
+    "tag": {
+      "en": "Catholic",
+      "de": "Katholisch",
+      "zh": "天主教"
+    },
+    "topics": [
+      "faith",
+      "social",
+      "culture",
+      "research",
+      "education"
+    ],
+    "text": {
+      "en": {
+        "values": [
+          "catholic faith",
+          "academic excellence",
+          "social responsibility",
+          "dialogue"
+        ],
+        "selectionProcess": "Written application, expert reviews, selection interviews assessing both academic potential and reflection on faith.",
+        "essayFocus": "Your reflection on the Catholic faith, how it shapes your worldview and societal engagement, combined with your academic ambitions."
+      },
+      "de": {
+        "values": [
+          "katholischer Glaube",
+          "akademische Exzellenz",
+          "soziale Verantwortung",
+          "Dialog"
+        ],
+        "selectionProcess": "Schriftliche Bewerbung, Fachgutachten und Auswahlgespräche, die sowohl akademisches Potenzial als auch die Reflexion des Glaubens berücksichtigen.",
+        "essayFocus": "Deine Reflexion über den katholischen Glauben, wie er dein Weltbild und dein gesellschaftliches Engagement prägt – verbunden mit deinen akademischen Zielen."
+      },
+      "zh": {
+        "values": [
+          "天主教信仰",
+          "学术卓越",
+          "社会责任",
+          "对话"
+        ],
+        "selectionProcess": "书面申请、专家评审，以及同时考察学术潜力与信仰反思的选拔面谈。",
+        "essayFocus": "你对天主教信仰的思考、它如何塑造你的世界观与社会参与，并结合你的学术抱负。"
+      }
+    },
+    "abbr": "Cu",
+    "shortName": "Cusanuswerk"
+  },
+  {
+    "id": "villigst",
+    "name": "Evangelisches Studienwerk Villigst",
+    "displayName": {
+      "en": "Protestant Academic Foundation Villigst",
+      "de": "Evangelisches Studienwerk Villigst",
+      "zh": "维利希特新教奖学金"
+    },
+    "type": "begabtenfoerderungswerk",
+    "orientation": {
+      "en": "Protestant",
+      "de": "Evangelisch"
+    },
+    "values": [
+      "protestant faith",
+      "social justice",
+      "ecological responsibility",
+      "critical thinking"
+    ],
+    "phases": [
+      "bachelor",
+      "master",
+      "phd"
+    ],
+    "hardFilters": [
+      "protestant"
+    ],
+    "deadlines": [
+      {
+        "label": "Winter Term",
+        "date": "2024-03-01",
+        "note": "Check official site"
+      }
+    ],
+    "selectionProcess": "Online application, pre-selection, and a multi-day selection seminar.",
+    "essayFocus": "Your social and ecological engagement rooted in Protestant values, and a critical approach to societal challenges.",
+    "documents": [
+      "motivation letter",
+      "CV",
+      "transcript",
+      "reference letter"
+    ],
+    "funding": {
+      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
+    },
+    "url": "https://www.evstudienwerk.de/",
+    "lastVerified": "2024-03-01",
+    "affinity": "protestant",
+    "tag": {
+      "en": "Protestant",
+      "de": "Evangelisch",
+      "zh": "新教"
+    },
+    "topics": [
+      "faith",
+      "social",
+      "ecology",
+      "equality",
+      "democracy"
+    ],
+    "text": {
+      "en": {
+        "values": [
+          "protestant faith",
+          "social justice",
+          "ecological responsibility",
+          "critical thinking"
+        ],
+        "selectionProcess": "Online application, pre-selection, and a multi-day selection seminar.",
+        "essayFocus": "Your social and ecological engagement rooted in Protestant values, and a critical approach to societal challenges."
+      },
+      "de": {
+        "values": [
+          "evangelischer Glaube",
+          "soziale Gerechtigkeit",
+          "ökologische Verantwortung",
+          "kritisches Denken"
+        ],
+        "selectionProcess": "Online-Bewerbung, Vorauswahl und ein mehrtägiges Auswahlseminar.",
+        "essayFocus": "Dein soziales und ökologisches Engagement aus evangelischer Überzeugung sowie ein kritischer Zugang zu gesellschaftlichen Herausforderungen."
+      },
+      "zh": {
+        "values": [
+          "新教信仰",
+          "社会公正",
+          "生态责任",
+          "批判性思维"
+        ],
+        "selectionProcess": "在线申请、初选，以及为期数日的选拔研讨会。",
+        "essayFocus": "你基于新教价值观的社会与生态参与，以及对社会挑战的批判性思考。"
+      }
+    },
+    "abbr": "Vi",
+    "shortName": "Villigst"
+  },
+  {
+    "id": "eles",
+    "name": "Ernst Ludwig Ehrlich Studienwerk",
+    "displayName": {
+      "en": "Ernst Ludwig Ehrlich Scholarship Fund",
+      "de": "Ernst Ludwig Ehrlich Studienwerk",
+      "zh": "恩斯特·路德维希·埃尔利希奖学金"
+    },
+    "type": "begabtenfoerderungswerk",
+    "orientation": {
+      "en": "Jewish",
+      "de": "Jüdisch"
+    },
+    "values": [
+      "jewish identity",
+      "academic excellence",
+      "societal engagement",
+      "pluralism"
+    ],
+    "phases": [
+      "bachelor",
+      "master",
+      "phd"
+    ],
+    "hardFilters": [],
+    "deadlines": [
+      {
+        "label": "General Application",
+        "date": null,
+        "note": "Check official site"
+      }
+    ],
+    "selectionProcess": "Written application followed by two selection interviews.",
+    "essayFocus": "Active participation in the Jewish community and society at large, alongside strong academic potential.",
+    "documents": [
+      "motivation letter",
+      "CV",
+      "transcript",
+      "reference letter"
+    ],
+    "funding": {
+      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
+    },
+    "url": "https://www.eles-studienwerk.de/",
+    "lastVerified": "2024-03-01",
+    "affinity": "jewish",
+    "tag": {
+      "en": "Jewish",
+      "de": "Jüdisch",
+      "zh": "犹太教"
+    },
+    "topics": [
+      "faith",
+      "culture",
+      "social",
+      "democracy",
+      "international"
+    ],
+    "text": {
+      "en": {
+        "values": [
+          "jewish identity",
+          "academic excellence",
+          "societal engagement",
+          "pluralism"
+        ],
+        "selectionProcess": "Written application followed by two selection interviews.",
+        "essayFocus": "Active participation in the Jewish community and society at large, alongside strong academic potential."
+      },
+      "de": {
+        "values": [
+          "jüdische Identität",
+          "akademische Exzellenz",
+          "gesellschaftliches Engagement",
+          "Pluralismus"
+        ],
+        "selectionProcess": "Schriftliche Bewerbung, gefolgt von zwei Auswahlgesprächen.",
+        "essayFocus": "Aktive Teilnahme am jüdischen Gemeindeleben und an der Gesellschaft insgesamt, zusammen mit starkem akademischem Potenzial."
+      },
+      "zh": {
+        "values": [
+          "犹太身份认同",
+          "学术卓越",
+          "社会参与",
+          "多元主义"
+        ],
+        "selectionProcess": "书面申请，随后进行两轮选拔面谈。",
+        "essayFocus": "积极参与犹太社群及整个社会，并具备突出的学术潜力。"
+      }
+    },
+    "abbr": "EL",
+    "shortName": "Ehrlich"
+  },
+  {
+    "id": "avicenna",
+    "name": "Avicenna-Studienwerk",
+    "displayName": {
+      "en": "Avicenna Scholarship Foundation",
+      "de": "Avicenna-Studienwerk",
+      "zh": "阿维森纳奖学金"
+    },
+    "type": "begabtenfoerderungswerk",
+    "orientation": {
+      "en": "Muslim",
+      "de": "Muslimisch"
+    },
+    "values": [
+      "muslim identity",
+      "social engagement",
+      "academic excellence",
+      "intercultural dialogue"
+    ],
+    "phases": [
+      "bachelor",
+      "master",
+      "phd"
+    ],
+    "hardFilters": [
+      "muslim"
+    ],
+    "deadlines": [
+      {
+        "label": "Winter Term",
+        "date": null,
+        "note": "Check official site"
+      }
+    ],
+    "selectionProcess": "Written application, expert reviews, and selection interviews.",
+    "essayFocus": "Your connection to Islam, voluntary engagement in the Muslim community or society, and how you aim to build bridges in society.",
+    "documents": [
+      "motivation letter",
+      "CV",
+      "transcript",
+      "reference letter"
+    ],
+    "funding": {
+      "note": "Follows the federal gifted-student funding model: an income-dependent basic amount plus a study allowance. Check the official site for current amounts and rules."
+    },
+    "url": "https://www.avicenna-studienwerk.de/",
+    "lastVerified": "2024-03-01",
+    "affinity": "muslim",
+    "tag": {
+      "en": "Muslim",
+      "de": "Muslimisch",
+      "zh": "伊斯兰教"
+    },
+    "topics": [
+      "faith",
+      "social",
+      "culture",
+      "international",
+      "education"
+    ],
+    "text": {
+      "en": {
+        "values": [
+          "muslim identity",
+          "social engagement",
+          "academic excellence",
+          "intercultural dialogue"
+        ],
+        "selectionProcess": "Written application, expert reviews, and selection interviews.",
+        "essayFocus": "Your connection to Islam, voluntary engagement in the Muslim community or society, and how you aim to build bridges in society."
+      },
+      "de": {
+        "values": [
+          "muslimische Identität",
+          "soziales Engagement",
+          "akademische Exzellenz",
+          "interkultureller Dialog"
+        ],
+        "selectionProcess": "Schriftliche Bewerbung, Fachgutachten und Auswahlgespräche.",
+        "essayFocus": "Deine Verbindung zum Islam, dein ehrenamtliches Engagement in der muslimischen Gemeinschaft oder Gesellschaft und wie du Brücken in der Gesellschaft bauen möchtest."
+      },
+      "zh": {
+        "values": [
+          "穆斯林身份认同",
+          "社会参与",
+          "学术卓越",
+          "跨文化对话"
+        ],
+        "selectionProcess": "书面申请、专家评审和选拔面谈。",
+        "essayFocus": "你与伊斯兰教的联系、在穆斯林社群或社会中的志愿参与，以及你打算如何在社会中搭建桥梁。"
+      }
+    },
+    "abbr": "Av",
+    "shortName": "Avicenna"
   },
   {
     "id": "boeckler",
@@ -1101,7 +1123,9 @@
         "selectionProcess": "申请通常需要与工会代表联系，随后进行面谈。",
         "essayFocus": "你的社会政治与工会参与、对劳工权益和共同决策的理解；尤其欢迎来自非学术家庭的申请者。"
       }
-    }
+    },
+    "abbr": "Bk",
+    "shortName": "Hans-Böckler"
   },
   {
     "id": "sdw",
@@ -1192,6 +1216,8 @@
         "selectionProcess": "多阶段流程，包括在线测评、评估中心和面谈。",
         "essayFocus": "你的创业思维、领导潜力，以及在商界和社会中承担责任的意愿。"
       }
-    }
+    },
+    "abbr": "sdw",
+    "shortName": "sdw"
   }
 ]
