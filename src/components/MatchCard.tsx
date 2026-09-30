@@ -24,7 +24,7 @@ export function MatchCard({ rank, match, scholarship, explanation, onStart, onDe
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, ease: "easeOut", delay: 0.12 * (rank - 1) }}
-      className={`glass lift flex w-[387px] flex-col p-6 ${featured ? "glass-featured" : ""}`}
+      className={`glass lift flex w-[387px] flex-col p-6 mobile:w-full mobile:p-5 ${featured ? "glass-featured" : ""}`}
     >
       <div className="flex items-start justify-between">
         <span
@@ -53,7 +53,7 @@ export function MatchCard({ rank, match, scholarship, explanation, onStart, onDe
       <button
         type="button"
         onClick={featured ? onStart : onDetails}
-        className={`mt-5 h-[44px] w-full rounded-full ${featured ? "btn-primary" : "btn-light"}`}
+        className={`mt-5 h-[44px] w-full rounded-full mobile:h-[48px] ${featured ? "btn-primary" : "btn-light"}`}
       >
         {featured ? t.matches.startApplication : t.matches.viewDetails}
       </button>

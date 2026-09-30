@@ -31,7 +31,7 @@ export function DocChecklist({ t, documents, statuses, onChange }: Props) {
   };
 
   return (
-    <div className="glass flex min-h-0 flex-1 flex-col px-[15px] pb-[15px] pt-[22px]">
+    <div className="glass flex min-h-0 flex-1 flex-col px-[15px] pb-[15px] pt-[22px] mobile:flex-none">
       <h2 className="mb-[13px] px-2 text-[15px] font-semibold text-ink">{t.workspace.requiredDocs}</h2>
       <ul className="thin-scroll -mr-1 flex min-h-0 flex-1 flex-col gap-[2px] overflow-y-auto pr-1">
         {documents.map((doc) => {

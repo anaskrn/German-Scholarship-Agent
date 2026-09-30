@@ -39,9 +39,9 @@ export default function AnalyzingPage() {
 
   return (
     <div className="flex h-full items-center justify-center pb-[6px]">
-      <div className="glass glass-strong flex w-[520px] flex-col items-center rounded-[32px] p-10 text-center">
+      <div className="glass glass-strong flex w-[520px] flex-col items-center rounded-[32px] p-10 text-center mobile:w-full mobile:p-6">
         <SpinnerRing />
-        <h1 className="mt-6 font-display text-[28px] font-semibold tracking-[-0.02em] text-ink">
+        <h1 className="mt-6 font-display text-[28px] font-semibold tracking-[-0.02em] text-ink mobile:text-[23px]">
           {t.analyzing.title(scholarshipCount())}
         </h1>
         <p className="mt-[18px] text-[14px] text-muted">{t.analyzing.subtitle}</p>

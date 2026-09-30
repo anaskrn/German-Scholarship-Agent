@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { LANGS, Lang } from "@/lib/schema";
 import { useAppStore, useT } from "@/lib/store";
+import { useIsMobile } from "@/lib/useMobile";
 
 const LANG_LABEL: Record<Lang, string> = { en: "EN", de: "DE", zh: "中文" };
 
@@ -17,6 +18,7 @@ function stepState(pathname: string): { active: number; done: number[] } {
 export function Nav() {
   const router = useRouter();
   const pathname = usePathname();
+  const isMobile = useIsMobile();
   const { t, lang } = useT();
   const setLang = useAppStore((s) => s.setLang);
   const showToast = useAppStore((s) => s.showToast);
@@ -35,13 +37,20 @@ export function Nav() {
   };
 
   return (
-    <header className="absolute left-[120px] top-6 z-50 w-[1200px]">
-      <nav className="glass grid h-[60px] grid-cols-[1fr_auto_1fr] items-center rounded-[30px] px-[21px]">
+    <header className={isMobile ? "relative z-50 mx-3 mt-3 shrink-0" : "absolute left-[120px] top-6 z-50 w-[1200px]"}>
+      <nav
+        className={`glass items-center ${
+          isMobile
+            ? "flex h-[52px] justify-between gap-2 px-3"
+            : "grid h-[60px] grid-cols-[1fr_auto_1fr] rounded-[30px] px-[21px]"
+        }`}
+        style={isMobile ? { borderRadius: 9999 } : undefined}
+      >
         {/* Left: logo + wordmark */}
         <button
           type="button"
           onClick={() => router.push("/")}
-          className="flex w-fit items-center gap-[10px]"
+          className="flex w-fit shrink-0 items-center gap-[10px]"
           aria-label="ScholarPath"
         >
           <span
@@ -50,21 +59,26 @@ export function Nav() {
           >
             S
           </span>
-          <span className="font-display text-[19px] font-semibold tracking-[-0.01em] text-ink">ScholarPath</span>
+          <span
+            className={`font-display text-[19px] font-semibold tracking-[-0.01em] text-ink ${isMobile ? "hidden min-[560px]:inline" : ""}`}
+          >
+            ScholarPath
+          </span>
         </button>
 
-        {/* Center: step indicator (exactly centered) */}
+        {/* Center: step indicator (exactly centered on desktop; labels collapse to the active one on mobile) */}
         <ol className="flex items-center" aria-label={t.nav.stepsLabel}>
           {steps.map((label, i) => {
             const isActive = i === active;
             const isDone = done.includes(i);
             const locked = i > 0 && !hasMatches;
+            const compact = isMobile && !isActive;
             return (
               <li key={i} className="flex items-center">
                 {i > 0 && (
                   <span
                     aria-hidden
-                    className="mx-1 h-[2px] w-7 rounded-full"
+                    className={`h-[2px] rounded-full ${isMobile ? "mx-0.5 w-2.5" : "mx-1 w-7"}`}
                     style={{
                       background: done.includes(i - 1) ? "var(--brand-gradient)" : "rgba(184, 179, 204, 0.45)",
                     }}
@@ -73,16 +87,20 @@ export function Nav() {
                 <button
                   type="button"
                   onClick={() => goToStep(i)}
+                  aria-label={label}
                   aria-current={isActive ? "step" : undefined}
                   aria-disabled={locked || undefined}
-                  className={`flex h-9 items-center gap-2 rounded-full px-3 text-[14px] transition-colors ${
+                  className={`flex h-9 items-center rounded-full text-[14px] transition-colors ${
+                    compact ? "w-8 justify-center" : isMobile ? "gap-1.5 px-2.5 max-[399px]:px-1.5" : "gap-2 px-3"
+                  } ${
                     isActive
                       ? "bg-white/90 font-semibold text-ink shadow-[0_4px_14px_-4px_rgba(75,47,168,0.22)]"
                       : `font-medium ${locked ? "cursor-default text-muted/70" : "text-muted hover:text-ink"}`
                   }`}
                 >
                   <StepDot n={i + 1} state={isActive ? "active" : isDone ? "done" : "todo"} />
-                  {label}
+                  {/* Very narrow phones: the numbered dots alone show the step (the label stays as aria-label). */}
+                  {!compact && <span className={isMobile ? "max-[399px]:hidden" : ""}>{label}</span>}
                 </button>
               </li>
             );
@@ -90,11 +108,11 @@ export function Nav() {
         </ol>
 
         {/* Right: language toggle */}
-        <div className="flex items-center justify-end gap-4">
+        <div className="flex shrink-0 items-center justify-end gap-4">
           <div
             role="group"
             aria-label={t.nav.langLabel}
-            className="flex h-[34px] items-center gap-[2px] rounded-full border border-white/80 bg-white/40 p-[3px]"
+            className={`flex items-center gap-[2px] rounded-full border border-white/80 bg-white/40 p-[3px] ${isMobile ? "h-[32px]" : "h-[34px]"}`}
           >
             {LANGS.map((code) => (
               <button
@@ -103,7 +121,7 @@ export function Nav() {
                 lang={code === "zh" ? "zh-Hans" : code}
                 aria-pressed={lang === code}
                 onClick={() => setLang(code)}
-                className={`h-7 min-w-[41px] rounded-full px-2 text-[12px] transition-all ${
+                className={`h-7 rounded-full text-[12px] transition-all ${isMobile ? "min-w-[30px] px-1.5" : "min-w-[41px] px-2"} ${
                   lang === code
                     ? "bg-white font-semibold text-ink shadow-[0_2px_8px_-2px_rgba(75,47,168,0.25)]"
                     : "font-medium text-muted hover:text-ink"
@@ -123,7 +141,7 @@ function StepDot({ n, state }: { n: number; state: "active" | "done" | "todo" })
   if (state === "done") {
     return (
       <span
-        className="flex h-[22px] w-[22px] items-center justify-center rounded-full text-white"
+        className="flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-white"
         style={{ background: "var(--brand-gradient)" }}
       >
         <Check className="h-3 w-3" strokeWidth={3} aria-hidden />
@@ -132,7 +150,7 @@ function StepDot({ n, state }: { n: number; state: "active" | "done" | "todo" })
   }
   return (
     <span
-      className={`flex h-[22px] w-[22px] items-center justify-center rounded-full text-[11px] font-semibold ${
+      className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full text-[11px] font-semibold ${
         state === "active" ? "bg-ink text-white" : "border-[1.5px] border-neutral-line text-muted"
       }`}
     >

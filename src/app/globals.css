@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Phones and small tablets (keep in sync with MOBILE_QUERY in src/lib/useMobile.ts). */
+@custom-variant mobile (@media (max-width: 899px));
+
 @theme {
   --font-sans: var(--font-geist-sans), var(--font-noto-sc), system-ui, sans-serif;
   --font-display: var(--font-outfit-display), var(--font-noto-sc), sans-serif;

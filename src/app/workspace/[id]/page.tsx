@@ -2,18 +2,21 @@
 
 import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Assistant } from "@/components/Assistant";
 import { DocChecklist, statusOf } from "@/components/DocChecklist";
 import { Editor } from "@/components/Editor";
 import { docKey, localizedName } from "@/lib/format";
 import { getScholarshipById } from "@/lib/matching";
 import { useAppStore, useT } from "@/lib/store";
+import { useIsMobile } from "@/lib/useMobile";
 
 export default function WorkspacePage() {
   const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const { t, lang } = useT();
+  const isMobile = useIsMobile();
+  const [tab, setTab] = useState<"docs" | "letter" | "assistant">("letter");
   const hydrated = useAppStore((s) => s.hydrated);
   const match = useAppStore((s) => s.matches.find((m) => m.scholarshipId === id));
   const statuses = useAppStore((s) => s.docStatus[id]);
@@ -33,11 +36,35 @@ export default function WorkspacePage() {
   const done = documents.filter((d) => statusOf(statuses ?? {}, docKey(d)) === "complete").length;
   const progress = documents.length ? (done / documents.length) * 100 : 0;
   const name = localizedName(scholarship, lang);
+  // Desktop: panels are plain flex children. Mobile: only the active tab is shown.
+  const panel = (key: typeof tab) => (!isMobile ? "contents" : tab === key ? "flex min-h-0 flex-1 flex-col" : "hidden");
 
   return (
-    <div className="flex h-[764px] gap-5 pt-0" style={{ marginTop: 12 }}>
+    <div className="mt-3 flex h-[764px] gap-5 mobile:mt-0 mobile:h-full mobile:flex-col mobile:gap-3">
+      {/* Mobile only: the three panels become tabs */}
+      {isMobile && (
+        <div role="tablist" className="glass glass-row flex shrink-0 gap-1 p-1" style={{ borderRadius: 9999 }}>
+          {(["docs", "letter", "assistant"] as const).map((key) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={tab === key}
+              onClick={() => setTab(key)}
+              className={`h-10 flex-1 rounded-full text-[13.5px] transition-all ${
+                tab === key ? "bg-white font-semibold text-ink shadow-[0_2px_10px_-3px_rgba(75,47,168,0.3)]" : "font-medium text-muted"
+              }`}
+            >
+              {t.workspace.tabs[key]}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* All panels stay mounted (chat and editor state survive tab switches); mobile shows one at a time. */}
+      <div className={panel("docs")}>
       {/* Left: scholarship + documents */}
-      <div className="flex h-full w-[290px] shrink-0 flex-col gap-4">
+      <div className="flex h-full w-[290px] shrink-0 flex-col gap-4 mobile:w-full mobile:min-h-0 mobile:flex-1 mobile:shrink mobile:overflow-y-auto">
         <div className="glass px-[23px] pb-[22px] pt-[23px]">
           <span
             className="inline-flex h-6 items-center rounded-full px-3 text-[10.5px] font-semibold tracking-[0.04em] text-white"
@@ -80,11 +107,18 @@ export default function WorkspacePage() {
         />
       </div>
 
+      </div>
+
       {/* Center: editor */}
+      <div className={panel("letter")}>
       <Editor key={`editor-${id}-${lang}`} scholarshipId={id} name={name} draft={draft} onDraftChange={(patch) => updateDraft(id, patch)} />
 
+      </div>
+
       {/* Right: assistant */}
+      <div className={panel("assistant")}>
       <Assistant key={`assistant-${id}-${lang}`} scholarship={scholarship} draft={draft?.body ?? ""} />
+      </div>
     </div>
   );
 }

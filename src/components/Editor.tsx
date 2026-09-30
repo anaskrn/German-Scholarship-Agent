@@ -119,23 +119,23 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
   ];
 
   return (
-    <section className="glass flex h-full min-w-0 flex-1 flex-col px-[37px] pb-[30px] pt-[31px]">
+    <section className="glass flex h-full min-w-0 flex-1 flex-col px-[37px] pb-[30px] pt-[31px] mobile:rounded-[26px] mobile:px-4 mobile:pb-4 mobile:pt-4">
       {/* Toolbar */}
-      <div className="flex items-center justify-between">
-        <div className="flex shrink-0 items-center gap-2">
+      <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-2">
+        <div className="flex shrink-0 items-center gap-2 mobile:flex-wrap">
           {tools.map(({ mode, label }) => (
             <button
               key={mode}
               type="button"
               disabled={busy !== null}
               onClick={() => runTool(mode)}
-              className="soft-tag h-8 whitespace-nowrap rounded-full px-[14px] text-[13px] font-medium transition-colors hover:bg-violet/15 disabled:opacity-60"
+              className="soft-tag h-8 whitespace-nowrap rounded-full px-[14px] text-[13px] font-medium transition-colors hover:bg-violet/15 disabled:opacity-60 mobile:h-9"
             >
               {busy === mode ? t.workspace.toolWorking : label}
             </button>
           ))}
         </div>
-        <span className="ml-3 flex min-w-0 items-center gap-[7px] whitespace-nowrap text-[12.5px] text-muted" aria-live="polite">
+        <span className="ml-3 mobile:ml-0 flex min-w-0 items-center gap-[7px] whitespace-nowrap text-[12.5px] text-muted" aria-live="polite">
           <span className={`h-[6px] w-[6px] shrink-0 rounded-full ${minutes === null ? "bg-neutral-line" : "bg-[#22c55e]"}`} />
           <span className="truncate">{savedLabel}</span>
         </span>
@@ -196,7 +196,7 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
         value={title}
         onChange={(e) => onDraftChange({ title: e.target.value.replace(/\n/g, " ") })}
         aria-label={t.workspace.defaultTitle(name)}
-        className="mt-[19px] block w-full resize-none overflow-hidden bg-transparent font-display text-[30px] font-semibold leading-[36px] tracking-[-0.02em] text-ink outline-none"
+        className="mt-[19px] block w-full resize-none overflow-hidden bg-transparent font-display text-[30px] font-semibold leading-[36px] tracking-[-0.02em] text-ink outline-none mobile:mt-3 mobile:text-[22px] mobile:leading-[28px]"
       />
 
       {/* Salutation + body */}
@@ -204,7 +204,7 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
         value={salutation}
         onChange={(e) => onDraftChange({ salutation: e.target.value })}
         aria-label={t.workspace.salutation}
-        className="mt-[14px] w-full bg-transparent text-[16px] font-medium leading-[24px] text-ink outline-none"
+        className="mt-[14px] w-full bg-transparent text-[16px] font-medium leading-[24px] text-ink outline-none mobile:mt-2"
       />
       <div className="relative mt-[10px] min-h-0 flex-1">
         <textarea
@@ -229,7 +229,7 @@ export function Editor({ scholarshipId, name, draft, onDraftChange }: Props) {
       {/* Footer */}
       <div className="mt-4 flex items-center justify-between">
         <span className="text-[13px] text-muted">{t.workspace.words(countWords(body))}</span>
-        <button type="button" onClick={generatePdf} className="btn-primary h-[42px] rounded-full px-5">
+        <button type="button" onClick={generatePdf} className="btn-primary h-[42px] rounded-full px-5 mobile:h-[44px]">
           {t.workspace.generatePdf}
         </button>
       </div>

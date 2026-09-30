@@ -24,7 +24,7 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
   // Portal into the scaled stage so the overlay covers the whole 1440x900 canvas, not just the page area.
   const host = useSyncExternalStore(
     () => () => {},
-    () => document.querySelector(".stage"),
+    () => document.querySelector("[data-overlay-root]"),
     () => null,
   );
 
@@ -57,7 +57,7 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.98 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
-            className="glass glass-strong thin-scroll relative max-h-[760px] w-[900px] overflow-y-auto rounded-[32px] p-8"
+            className="glass glass-strong thin-scroll relative max-h-[760px] w-[900px] overflow-y-auto rounded-[32px] p-8 mobile:max-h-[calc(100%-24px)] mobile:w-[calc(100%-24px)] mobile:rounded-[26px] mobile:p-5"
             style={{ background: "rgba(255,255,255,0.86)" }}
           >
             <button
@@ -70,10 +70,10 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
               <X className="h-4 w-4" aria-hidden />
             </button>
 
-            <div className="flex items-center gap-5 pr-12">
+            <div className="flex items-center gap-5 pr-12 mobile:gap-4">
               <MatchRing value={match.score} label={t.matches.matchPercent(match.score)} />
               <div>
-                <h2 className="font-display text-[26px] font-semibold leading-[32px] tracking-[-0.015em] text-ink">{s.name}</h2>
+                <h2 className="font-display text-[26px] font-semibold leading-[32px] tracking-[-0.015em] text-ink mobile:text-[20px] mobile:leading-[25px]">{s.name}</h2>
                 <span className="soft-tag mt-2 inline-flex h-[26px] items-center rounded-[13px] px-[10px] text-[12px] font-medium">
                   {s.tag[lang]}
                 </span>
@@ -86,7 +86,7 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
               </p>
             )}
 
-            <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5 text-[14px] leading-[22px] text-ink/85">
+            <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-5 text-[14px] leading-[22px] text-ink/85 mobile:grid-cols-1">
               <div className="space-y-5">
                 <Section title={t.details.whyFits}>{explanation}</Section>
                 <Section title={t.details.selection}>{scholarshipText(s, lang).selectionProcess}</Section>
@@ -126,21 +126,21 @@ export function ScholarshipDetails({ scholarship: s, match, explanation, onClose
               </div>
             </div>
 
-            <div className="mt-7 flex items-center justify-between gap-6">
+            <div className="mt-7 flex items-center justify-between gap-6 mobile:mt-5 mobile:flex-col mobile:items-stretch mobile:gap-4">
               <p className="max-w-[520px] text-[12px] leading-[18px] text-muted">
                 {t.details.verified(formatVerified(s.lastVerified, lang))} {t.details.disclaimer}
               </p>
-              <div className="flex shrink-0 items-center gap-3">
+              <div className="flex shrink-0 items-center gap-3 mobile:flex-col-reverse mobile:items-stretch">
                 <a
                   href={s.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-light flex h-[42px] items-center gap-2 rounded-full px-5"
+                  className="btn-light flex h-[42px] items-center justify-center gap-2 rounded-full px-5 mobile:h-[46px]"
                 >
                   {t.details.officialSite}
                   <ExternalLink className="h-3.5 w-3.5" aria-hidden />
                 </a>
-                <button type="button" onClick={() => onStart(s.id)} className="btn-primary h-[42px] rounded-full px-5">
+                <button type="button" onClick={() => onStart(s.id)} className="btn-primary h-[42px] rounded-full px-5 mobile:h-[46px]">
                   {t.matches.startApplication}
                 </button>
               </div>

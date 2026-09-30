@@ -48,10 +48,10 @@ export default function MatchesPage() {
   if (matches.length === 0) return null;
 
   return (
-    <div className="flex h-full flex-col pt-[12px]">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="font-display text-[42px] font-semibold leading-[50px] tracking-[-0.025em] text-ink">
+    <div className="flex h-full flex-col pt-[12px] mobile:h-auto mobile:pt-0">
+      <div className="flex items-center justify-between mobile:flex-col mobile:items-start mobile:gap-3">
+        <div className="flex items-center gap-4 mobile:flex-wrap mobile:gap-2">
+          <h1 className="font-display text-[42px] font-semibold leading-[50px] tracking-[-0.025em] text-ink mobile:text-[30px] mobile:leading-[36px]">
             {t.matches.title(top.length)}
           </h1>
           {aiDegraded && (
@@ -60,12 +60,12 @@ export default function MatchesPage() {
             </span>
           )}
         </div>
-        <button type="button" onClick={() => router.push("/")} className="glass lift h-[42px] rounded-full px-[19px] text-[14px] font-medium text-ink" style={{ borderRadius: 9999 }}>
+        <button type="button" onClick={() => router.push("/")} className="glass lift h-[42px] rounded-full px-[19px] text-[14px] font-medium text-ink mobile:h-[44px]" style={{ borderRadius: 9999 }}>
           {t.matches.refine}
         </button>
       </div>
 
-      <div className="mt-[20px] flex min-h-[342px] items-start gap-5">
+      <div className="mt-[20px] flex min-h-[342px] items-start gap-5 mobile:mt-4 mobile:min-h-0 mobile:flex-col mobile:gap-4">
         {top.map((m, i) => {
           const s = getScholarshipById(m.scholarshipId);
           if (!s) return null;
@@ -83,12 +83,12 @@ export default function MatchesPage() {
         })}
       </div>
 
-      <div className="mt-[20px] flex items-baseline justify-between">
+      <div className="mt-[20px] flex items-baseline justify-between mobile:mt-6">
         <h2 className="text-[15px] font-semibold text-ink">{t.matches.more}</h2>
         <span className="text-[12px] text-muted">{t.matches.sortedByFit}</span>
       </div>
 
-      <div className="mt-3 grid grid-cols-2 gap-x-4">
+      <div className="mt-3 grid grid-cols-2 gap-x-4 mobile:grid-cols-1 mobile:gap-y-2">
         {columns.map((col, ci) => (
           <ul key={ci} className="flex flex-col gap-2">
             {col.map((m, i) => {
@@ -104,12 +104,12 @@ export default function MatchesPage() {
                   <button
                     type="button"
                     onClick={() => setOpenId(s.id)}
-                    className="glass glass-row lift flex h-[44px] w-full items-center justify-between px-[19px] text-left"
+                    className="glass glass-row lift flex h-[44px] w-full items-center justify-between gap-3 px-[19px] text-left mobile:h-auto mobile:min-h-[52px] mobile:px-4 mobile:py-2"
                     style={{ borderRadius: 16 }}
                     aria-label={`${s.name}, ${t.matches.matchPercent(m.score)}`}
                   >
-                    <span className="flex min-w-0 items-baseline gap-3">
-                      <span className="truncate text-[14px] font-medium text-ink">{s.name}</span>
+                    <span className="flex min-w-0 items-baseline gap-3 mobile:flex-col mobile:items-start mobile:gap-0">
+                      <span className="truncate text-[14px] font-medium text-ink mobile:max-w-full">{s.name}</span>
                       <span className="shrink-0 text-[12px] text-muted">{s.tag[lang].split(" · ").pop()}</span>
                     </span>
                     <span className="flex shrink-0 items-center gap-3">

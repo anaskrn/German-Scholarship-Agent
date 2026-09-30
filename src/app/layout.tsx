@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Noto_Sans_SC, Outfit } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
@@ -11,6 +11,13 @@ const notoSc = Noto_Sans_SC({ variable: "--font-noto-sc", weight: ["400", "500",
 export const metadata: Metadata = {
   title: "ScholarPath",
   description: "Find the scholarship that actually fits you, and write the application.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#faf8ff",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

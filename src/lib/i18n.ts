@@ -83,6 +83,7 @@ const en = {
     subtitle: (name: string) => `${name}, Germany`,
     progress: "Application progress",
     requiredDocs: "Required Documents",
+    tabs: { docs: "Documents", letter: "Letter", assistant: "Assistant" },
     status: { complete: "complete", inProgress: "in-progress", incomplete: "incomplete" },
     statusAction: (doc: string, status: string) => `${doc}: ${status}. Click to change status.`,
     docs: {
@@ -261,6 +262,7 @@ const de: Dict = {
     subtitle: (name: string) => `${name}, Deutschland`,
     progress: "Bewerbungsfortschritt",
     requiredDocs: "Erforderliche Unterlagen",
+    tabs: { docs: "Unterlagen", letter: "Brief", assistant: "Assistent" },
     status: { complete: "fertig", inProgress: "in Arbeit", incomplete: "offen" },
     statusAction: (doc: string, status: string) => `${doc}: ${status}. Klicken, um den Status zu ändern.`,
     docs: {
@@ -427,6 +429,7 @@ const zh: Dict = {
     subtitle: (name: string) => `${name}，德国`,
     progress: "申请进度",
     requiredDocs: "所需材料",
+    tabs: { docs: "材料", letter: "信件", assistant: "助手" },
     status: { complete: "已完成", inProgress: "进行中", incomplete: "未完成" },
     statusAction: (doc: string, status: string) => `${doc}：${status}。点击切换状态。`,
     docs: {

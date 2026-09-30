@@ -134,7 +134,7 @@ export function Assistant({ scholarship, draft }: Props) {
   };
 
   return (
-    <aside className="glass flex h-full w-[300px] shrink-0 flex-col rounded-[26px] px-[22px] pb-[14px] pt-5">
+    <aside className="glass flex h-full w-[300px] shrink-0 flex-col rounded-[26px] px-[22px] pb-[14px] pt-5 mobile:w-full mobile:min-h-0 mobile:flex-1 mobile:shrink mobile:px-4">
       <header className="flex items-center gap-[11px]">
         <span
           className="h-[26px] w-[26px] shrink-0 rounded-full"
@@ -209,7 +209,7 @@ export function Assistant({ scholarship, draft }: Props) {
           placeholder={t.workspace.askPlaceholder}
           aria-label={t.workspace.askPlaceholder}
           maxLength={2000}
-          className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none placeholder:text-muted"
+          className="min-w-0 flex-1 bg-transparent text-[13px] text-ink outline-none placeholder:text-muted mobile:text-[16px]"
         />
         <button
           type="submit"
