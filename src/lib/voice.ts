@@ -24,6 +24,8 @@ export interface VoiceTurn {
 
 interface VoiceContext {
   lang: Lang;
+  /** what the agent says first, in the selected language */
+  opening: string;
   foundationName: string;
   values: string[];
   selectionProcess: string;
@@ -66,6 +68,8 @@ function useLatest<T>(value: T) {
   return ref;
 }
 
+type SessionPart = { signedUrl: string } | { agentId: string; connectionType: "webrtc" };
+
 function issueFromMessage(message: string): VoiceIssue {
   return /quota|limit|exceed|insufficient|credit|subscription|minutes/i.test(message) ? "quota" : "connection_failed";
 }
@@ -79,11 +83,20 @@ function useElevenLabsVoice(onTurn: VoiceHandlers["onTurn"], onIssue: (issue: Vo
     setState(stateRef.current);
   }, []);
 
+  // Per session we send the selected language and first message. If the agent's dashboard does not allow these
+  // overrides (Security tab), the first attempt fails and we connect again with the agent's own settings.
+  const heardAgentRef = useRef(false);
+  const overridesRef = useRef(false);
+  const pendingRef = useRef<{ session: SessionPart; vars: Record<string, string> } | null>(null);
+  const ignoreUntilRef = useRef(0);
+  const failRef = useRef<(message: string, disconnected: boolean) => void>(() => {});
+
   const conversation = useConversation({
     micMuted: muted,
     onConnect: () => update("listening"),
     onMessage: ({ role, message }) => {
       if (!message?.trim()) return;
+      heardAgentRef.current = true;
       if (role === "user") update("thinking");
       onTurn({ role: role === "agent" ? "interviewer" : "you", text: message.trim() });
     },
@@ -95,15 +108,46 @@ function useElevenLabsVoice(onTurn: VoiceHandlers["onTurn"], onIssue: (issue: Vo
         return prev === "thinking" ? prev : "listening";
       }),
     onDisconnect: (details) => {
-      update("ended");
-      if (details.reason === "error") onIssue(issueFromMessage(details.message));
+      if (Date.now() < ignoreUntilRef.current) return; // the attempt we ended ourselves
+      if (details.reason === "error") failRef.current(details.message, true);
+      else update("ended");
     },
     onError: (message) => {
       console.warn("[voice] error:", String(message).slice(0, 120));
-      onIssue(issueFromMessage(String(message)));
+      failRef.current(String(message), false);
     },
   });
   const conv = useLatest(conversation);
+
+  useEffect(() => {
+    failRef.current = (message, disconnected) => {
+      if (Date.now() < ignoreUntilRef.current) return; // the failed attempt closing down
+      // The server accepts the connection and only then rejects language / first-message overrides that the
+      // agent's dashboard does not allow. Until the agent has said something, try again with its own settings.
+      if (!heardAgentRef.current && overridesRef.current && pendingRef.current) {
+        const { session, vars } = pendingRef.current;
+        overridesRef.current = false;
+        ignoreUntilRef.current = Date.now() + 1200;
+        update("connecting");
+        try {
+          conv.current.endSession();
+        } catch {
+          // already closed
+        }
+        setTimeout(() => {
+          try {
+            conv.current.startSession({ ...session, dynamicVariables: vars });
+          } catch {
+            update("ended");
+            onIssue("connection_failed");
+          }
+        }, 600);
+        return;
+      }
+      if (disconnected) update("ended");
+      onIssue(issueFromMessage(message));
+    };
+  });
 
   const start = useCallback(
     async (ctx: VoiceContext) => {
@@ -127,15 +171,22 @@ function useElevenLabsVoice(onTurn: VoiceHandlers["onTurn"], onIssue: (issue: Vo
         const res = await fetch("/api/voice/signed-url", { cache: "no-store" });
         if (!res.ok) throw new Error("no session");
         const { signedUrl } = (await res.json()) as { signedUrl: string | null };
-        const session = signedUrl ? { signedUrl } : { agentId: AGENT_ID, connectionType: "webrtc" as const };
+        const session: SessionPart = signedUrl ? { signedUrl } : { agentId: AGENT_ID, connectionType: "webrtc" };
+        const vars = {
+          foundation_name: ctx.foundationName,
+          foundation_values: ctx.values.join(", "),
+          selection_process: ctx.selectionProcess,
+          language: ctx.lang === "de" ? "German" : ctx.lang === "zh" ? "Simplified Chinese" : "English",
+        };
+        heardAgentRef.current = false;
+        overridesRef.current = true;
+        ignoreUntilRef.current = 0;
+        pendingRef.current = { session, vars };
         conv.current.startSession({
           ...session,
-          dynamicVariables: {
-            foundation_name: ctx.foundationName,
-            foundation_values: ctx.values.join(", "),
-            selection_process: ctx.selectionProcess,
-            language: ctx.lang === "de" ? "German" : ctx.lang === "zh" ? "Simplified Chinese" : "English",
-          },
+          dynamicVariables: vars,
+          // speak (and listen in) the language selected in the app, starting with a greeting in that language
+          overrides: { agent: { language: ctx.lang, firstMessage: ctx.opening } },
         });
         return true;
       } catch {
@@ -216,7 +267,7 @@ export function useVoice(handlers: VoiceHandlers): VoiceControls {
   const onIssue = useCallback(
     (issue: VoiceIssue) => {
       setProvider("text-only");
-      void textRef.current.start({ lang: "en", foundationName: "", values: [], selectionProcess: "" });
+      void textRef.current.start({ lang: "en", opening: "", foundationName: "", values: [], selectionProcess: "" });
       handlersRef.current.onIssue(issue);
     },
     [handlersRef, textRef],
@@ -241,7 +292,7 @@ export function useVoice(handlers: VoiceHandlers): VoiceControls {
     provider,
     switchToText: () => {
       setProvider("text-only");
-      void text.start({ lang: "en", foundationName: "", values: [], selectionProcess: "" });
+      void text.start({ lang: "en", opening: "", foundationName: "", values: [], selectionProcess: "" });
     },
     resetProvider: () => setProvider(voiceConfigured ? "elevenlabs" : "text-only"),
     start: async (ctx) => {

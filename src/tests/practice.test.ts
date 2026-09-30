@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   averageMetrics,
+  interviewOpening,
   interviewQuestions,
   isQuestion,
   isSubstantiveAnswer,
@@ -78,5 +79,20 @@ describe("silence handling", () => {
     expect(isSubstantiveAnswer("I study renewable energy.")).toBe(true);
     expect(isSubstantiveAnswer("Ich studiere erneuerbare Energien.")).toBe(true);
     expect(isSubstantiveAnswer("我在柏林学习可再生能源。")).toBe(true);
+  });
+});
+
+describe("voice agent opening", () => {
+  it("is written in the selected language, names the foundation and is question 1", () => {
+    const en = interviewOpening("en", "Heinrich-Böll-Stiftung");
+    const de = interviewOpening("de", "Heinrich-Böll-Stiftung");
+    const zh = interviewOpening("zh", "Heinrich-Böll-Stiftung");
+    for (const text of [en, de, zh]) {
+      expect(text).toContain("Heinrich-Böll-Stiftung");
+      expect(isQuestion(text)).toBe(true);
+    }
+    expect(de).toMatch(/Hallo und willkommen/);
+    expect(zh).toMatch(/[㐀-鿿]{10}/);
+    expect(en).toMatch(/welcome/);
   });
 });

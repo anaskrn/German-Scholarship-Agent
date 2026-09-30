@@ -19,6 +19,7 @@ const VoiceProvider = dynamic(() => import("@/components/practice/VoiceProvider"
 export default function PracticePage() {
   const router = useRouter();
   const hydrated = useAppStore((s) => s.hydrated);
+  const lang = useAppStore((s) => s.lang);
   const hasProfile = useAppStore((s) => s.profile !== null && s.matches.length > 0);
   const scholarshipId = useAppStore((s) => s.practiceScholarshipId);
   const scholarship = scholarshipId ? getScholarshipById(scholarshipId) : undefined;
@@ -31,7 +32,8 @@ export default function PracticePage() {
   if (guard !== "ok" || !scholarship) return null;
   return (
     <VoiceProvider>
-      <PracticeScreen scholarship={scholarship} />
+      {/* A new language remounts the screen: the running session ends and starts again in that language. */}
+      <PracticeScreen key={lang} scholarship={scholarship} />
     </VoiceProvider>
   );
 }

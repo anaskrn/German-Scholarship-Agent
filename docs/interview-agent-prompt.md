@@ -7,11 +7,15 @@ The app only connects to it; the agent's behaviour comes from the texts below.
 
 1. ElevenLabs dashboard → **Agents** → **Create agent** (blank).
 2. Paste the **System prompt** and the **First message** from below.
-3. **Language**: set the default to English and enable the languages German and Chinese. The app tells the agent
-   which language to use through the `{{language}}` variable (see the prompt).
+3. **Languages**: keep English as the default and add **German** and **Chinese** as additional languages.
+   The app sends the language selected at the top (EN / DE / 中文) with every session, so the agent listens and
+   speaks that language. For this, the agent's dashboard must allow it (see step 6).
 4. **Voice**: pick any voice that sounds calm and professional (multilingual voices work best for DE/ZH).
 5. **Tools**: enable the system tool **End conversation** so the agent can close the session after the summary.
 6. **Security** tab:
+   - **Overrides**: turn on **Language** and **First message**. Without this the agent stays in its default language
+     (English) and greets in English, whatever language is selected in the app. (If the overrides are not allowed the
+     app still works: it connects with the agent's own settings.) Do not enable the System prompt override.
    - Public agent (simplest): leave authentication off and add your domain(s) to the **allowlist**
      (for example `localhost:3000` and your Vercel domain) so nobody else can use your free minutes.
    - Private agent: turn **Enable authentication** on. The app then asks its own server for a signed URL
@@ -86,6 +90,9 @@ questions or drift off the list. Keep "interruptions" on and set the turn timeou
 has time to think.
 
 ## 5. First message
+
+The app sends the first message itself, in the selected language (see `interviewOpening` in `src/lib/practice.ts`),
+so this field only matters as a fallback and for testing in the dashboard. Use:
 
 ```
 Hello, and welcome to your practice interview for the {{foundation_name}}. I will ask you about five short questions. Take your time and answer in your own words. Let's begin: could you tell me a little about yourself?

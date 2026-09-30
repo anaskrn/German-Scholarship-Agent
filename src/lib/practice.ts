@@ -107,3 +107,17 @@ export function interviewQuestions(lang: Lang, name: string, values: string[]): 
     "What would you bring to the community of the foundation, and what do you want to achieve in the next five years?",
   ];
 }
+
+/**
+ * First thing the voice agent says, per language. It is sent with every session (together with the language) so the
+ * agent speaks the language selected in the app, whatever its default is. It is question 1, so it ends with "?".
+ */
+export function interviewOpening(lang: Lang, name: string): string {
+  if (lang === "de") {
+    return `Hallo und willkommen zu deinem Probeinterview für die ${name}. Ich stelle dir etwa fünf kurze Fragen. Nimm dir Zeit und antworte in deinen eigenen Worten. Lass uns anfangen: Kannst du mir ein wenig über dich erzählen?`;
+  }
+  if (lang === "zh") {
+    return `你好，欢迎参加${name}的模拟面试。我会问你大约五个简短的问题。请慢慢来，用你自己的话回答。我们开始吧：你能先简单介绍一下你自己吗？`;
+  }
+  return `Hello, and welcome to your practice interview for the ${name}. I will ask you about five short questions. Take your time and answer in your own words. Let's begin: could you tell me a little about yourself?`;
+}

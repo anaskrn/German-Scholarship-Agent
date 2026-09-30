@@ -44,7 +44,7 @@ const en = {
     ],
     emptyHint: "Write a few words about yourself or attach your CV.",
     privacy:
-      "Your text is sent to an external AI service (Mistral, EU) to analyze it. Nothing is stored on our servers.",
+      "Powered by Mistral (text, EU) and ElevenLabs (optional voice). Your text goes to Mistral to analyze it; in the interview practice your voice is streamed to ElevenLabs. We store nothing.",
   },
   analyzing: {
     title: (n: number) => `Analyzing ${n} scholarships…`,
@@ -370,7 +370,7 @@ const de: Dict = {
     ],
     emptyHint: "Schreib ein paar Worte über dich oder hänge deinen Lebenslauf an.",
     privacy:
-      "Dein Text wird zur Analyse an einen externen KI-Dienst (Mistral, EU) gesendet. Auf unseren Servern wird nichts gespeichert.",
+      "Mit Mistral (Text, EU) und ElevenLabs (optional Sprache). Dein Text geht zur Analyse an Mistral; im Interview-Training wird deine Stimme an ElevenLabs gestreamt. Wir speichern nichts.",
   },
   analyzing: {
     title: (n: number) => `Analysiere ${n} Stipendien…`,
@@ -691,7 +691,8 @@ const zh: Dict = {
     examplesLabel: "试试这些例子",
     examples: ["软件工程硕士", "柏林的博士资助", "Erasmus 的替代方案", "无需德语要求"],
     emptyHint: "请先写几句介绍自己，或上传简历。",
-    privacy: "你的文字将发送到外部 AI 服务（Mistral，欧盟）进行分析。我们的服务器不会存储任何内容。",
+    privacy:
+      "由 Mistral（文本，欧盟）和 ElevenLabs（可选语音）提供支持。你的文字会发送到 Mistral 进行分析；面试练习中你的声音会传送到 ElevenLabs。我们不存储任何内容。",
   },
   analyzing: {
     title: (n: number) => `正在分析 ${n} 项奖学金…`,

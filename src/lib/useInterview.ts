@@ -5,6 +5,7 @@ import { errorKind, postJson } from "./client-api";
 import { Translations } from "./i18n";
 import {
   averageMetrics,
+  interviewOpening,
   interviewQuestions,
   isQuestion,
   isSubstantiveAnswer,
@@ -203,6 +204,7 @@ export function useInterview({ lang, scholarship, t }: { lang: Lang; scholarship
       setIssue(null);
       const ctx = {
         lang,
+        opening: interviewOpening(lang, scholarship.name),
         foundationName: scholarship.name,
         values: scholarship.values,
         selectionProcess: scholarship.selectionProcess,
