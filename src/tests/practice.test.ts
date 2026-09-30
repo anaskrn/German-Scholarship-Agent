@@ -3,6 +3,7 @@ import {
   averageMetrics,
   interviewQuestions,
   isQuestion,
+  isSubstantiveAnswer,
   paceOf,
   parseFeedback,
   TOTAL_QUESTIONS,
@@ -65,5 +66,17 @@ describe("interview helpers", () => {
     }
     expect(interviewQuestions("en", "X", ["a", "b", "c", "d"])[2]).toContain("a, b, c");
     expect(interviewQuestions("en", "X", ["a", "b", "c", "d"])[2]).not.toContain("d");
+  });
+});
+
+describe("silence handling", () => {
+  it("does not treat speech-to-text silence as an answer", () => {
+    for (const silence of ["...", "…", "  ", "uh", "Yes.", "。。。", "嗯"])
+      expect(isSubstantiveAnswer(silence)).toBe(false);
+  });
+  it("accepts real answers in all languages", () => {
+    expect(isSubstantiveAnswer("I study renewable energy.")).toBe(true);
+    expect(isSubstantiveAnswer("Ich studiere erneuerbare Energien.")).toBe(true);
+    expect(isSubstantiveAnswer("我在柏林学习可再生能源。")).toBe(true);
   });
 });

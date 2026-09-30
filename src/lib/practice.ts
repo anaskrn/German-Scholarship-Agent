@@ -51,6 +51,18 @@ export function isQuestion(text: string): boolean {
 
 const CJK = /[㐀-鿿]/g;
 
+/**
+ * Speech-to-text returns "..." or a single filler word for silence. That is not an answer: it must not be rated
+ * or shown (it would drag the scores down). Needs at least 3 words, or 5 Chinese characters.
+ */
+export function isSubstantiveAnswer(text: string): boolean {
+  const cleaned = text.replace(/[.…。,，!?！？\s-]+/g, " ").trim();
+  if (!cleaned) return false;
+  const cjk = cleaned.match(CJK)?.length ?? 0;
+  const words = cleaned.replace(CJK, " ").match(/\S+/g)?.length ?? 0;
+  return cjk >= 5 || words + cjk >= 3;
+}
+
 /** Spoken words per minute; Chinese counts characters (about 1.7 characters per word). */
 export function wordsPerMinute(text: string, seconds: number): number | null {
   if (seconds < 3) return null;

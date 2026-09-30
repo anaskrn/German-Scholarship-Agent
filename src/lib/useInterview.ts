@@ -7,6 +7,7 @@ import {
   averageMetrics,
   interviewQuestions,
   isQuestion,
+  isSubstantiveAnswer,
   Metrics,
   parseFeedback,
   TOTAL_QUESTIONS,
@@ -93,13 +94,21 @@ export function useInterview({ lang, scholarship, t }: { lang: Lang; scholarship
 
   const handleTurn = useCallback(
     (turn: VoiceTurn) => {
+      // Silence comes back as "..." from speech-to-text: neither shown nor rated.
+      if (turn.role === "you" && !isSubstantiveAnswer(turn.text)) return;
       addTurn(turn.role, turn.text);
       if (turn.role === "interviewer") {
-        if (isQuestion(turn.text) && askedRef.current < TOTAL_QUESTIONS) {
+        // A question counts as the next one only after the student answered the previous one, so
+        // clarifications such as "Are you still there?" do not advance "Question N of 5".
+        if (
+          isQuestion(turn.text) &&
+          askedRef.current < TOTAL_QUESTIONS &&
+          answersRef.current.length >= askedRef.current
+        ) {
           askedRef.current += 1;
           setAsked(askedRef.current);
+          lastQuestionRef.current = turn.text;
         }
-        if (isQuestion(turn.text)) lastQuestionRef.current = turn.text;
         return;
       }
       answersRef.current.push({ question: lastQuestionRef.current, answer: turn.text });

@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 
 /**
  * Signed URL for a PRIVATE ElevenLabs agent. ELEVENLABS_API_KEY stays on the server and never reaches the client.
- * Without the key this returns 501 and the client connects to the public agent by its id instead.
+ * Without the key this answers { signedUrl: null } and the client connects to the public agent by its id instead.
  */
 export async function GET() {
   const key = process.env.ELEVENLABS_API_KEY;
   const agentId = process.env.NEXT_PUBLIC_ELEVENLABS_AGENT_ID;
-  if (!key || !agentId) return NextResponse.json({ error: "not_configured" }, { status: 501 });
+  if (!key || !agentId) return NextResponse.json({ signedUrl: null });
 
   try {
     const res = await fetch(

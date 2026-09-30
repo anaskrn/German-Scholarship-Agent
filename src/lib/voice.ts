@@ -123,15 +123,11 @@ function useElevenLabsVoice(onTurn: VoiceHandlers["onTurn"], onIssue: (issue: Vo
       }
       try {
         // Private agent: the server signs a short-lived URL (the API key never reaches the browser).
-        // No key configured (501): connect to the public agent by its id.
+        // No key configured ({ signedUrl: null }): connect to the public agent by its id.
         const res = await fetch("/api/voice/signed-url", { cache: "no-store" });
-        const session =
-          res.status === 501
-            ? { agentId: AGENT_ID, connectionType: "webrtc" as const }
-            : res.ok
-              ? { signedUrl: ((await res.json()) as { signedUrl: string }).signedUrl }
-              : null;
-        if (!session) throw new Error("no session");
+        if (!res.ok) throw new Error("no session");
+        const { signedUrl } = (await res.json()) as { signedUrl: string | null };
+        const session = signedUrl ? { signedUrl } : { agentId: AGENT_ID, connectionType: "webrtc" as const };
         conv.current.startSession({
           ...session,
           dynamicVariables: {
