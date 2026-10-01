@@ -206,7 +206,8 @@ const en = {
     refreshTips: "Refresh tips",
     errors: {
       rate_limited: "The AI service is busy right now. Please try again in a moment.",
-      no_key: "The AI service is not configured. Add MISTRAL_API_KEY to .env.local.",
+      no_key:
+        "The AI service is not configured. Add MISTRAL_API_KEY (in .env.local, or in the Vercel project settings and redeploy).",
       failed: "Something went wrong. Please try again.",
     },
     tips: {
@@ -534,7 +535,8 @@ const de: Dict = {
     refreshTips: "Tipps aktualisieren",
     errors: {
       rate_limited: "Der KI-Dienst ist gerade ausgelastet. Bitte versuche es gleich noch einmal.",
-      no_key: "Der KI-Dienst ist nicht eingerichtet. Trage MISTRAL_API_KEY in .env.local ein.",
+      no_key:
+        "Der KI-Dienst ist nicht eingerichtet. Trage MISTRAL_API_KEY ein (in .env.local oder in den Vercel-Projekteinstellungen, danach neu veröffentlichen).",
       failed: "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     },
     tips: {
@@ -846,7 +848,7 @@ const zh: Dict = {
     refreshTips: "刷新建议",
     errors: {
       rate_limited: "AI 服务目前繁忙，请稍后再试。",
-      no_key: "AI 服务尚未配置。请在 .env.local 中添加 MISTRAL_API_KEY。",
+      no_key: "AI 服务尚未配置。请添加 MISTRAL_API_KEY（在 .env.local 中，或在 Vercel 项目设置中添加后重新部署）。",
       failed: "出了点问题，请重试。",
     },
     tips: {
